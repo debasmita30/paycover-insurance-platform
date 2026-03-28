@@ -293,29 +293,13 @@ Converted           ▌                                      166     2%
 
 ## 🛠️ Tech Stack
 
-### What's Shipped (Frontend)
-
 | Layer | Technology |
 |-------|-----------|
 | Structure | HTML5 · Semantic markup |
 | Styling | CSS3 · Custom Properties · No framework |
 | Logic | Vanilla JS ES6+ · Zero dependencies |
 | Fonts | DM Sans · Syne · JetBrains Mono |
-| Hosting | Vercel (CDN · auto-deploy on push) |
-
-### Backend Contract (Defined — Engineering Handoff Ready)
-
-| Layer | Technology | Rationale |
-|-------|-----------|-----------|
-| API | Node.js 20 + Express + TypeScript | Paytm's existing backend stack |
-| AI Service | Python + FastAPI + scikit-learn | ML team owns this service |
-| Database | PostgreSQL 15 | ACID compliance for financial data |
-| Cache | Redis 7 | Plan data TTL: 24h |
-| Analytics | Mixpanel + GA4 | Product events + marketing attribution |
-| Payments | Paytm PG SDK v2 | Native UPI — no redirect |
-| Infra | GKE + Docker | Kubernetes for auto-scaling |
-
-> **Why no backend built?** As a PM, my job is to define the *what* and *why* — spec the API contracts, own the data model, set the SLAs, and hand off to engineering. The frontend ships the full user experience. The backend spec is production-ready for an engineer to implement in < 2 sprints.
+| Hosting | Vercel · Auto-deploy on push |
 
 ---
 
