@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayCover Pro — Insurance Platform | PIBPL Production Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #002970; --sky: #00BAF2; --navy: #001744; --teal: #00D4AA;
+  --orange: #FF6B35; --warn: #FFB800; --surface: #F4F7FF;
+  --card: #FFFFFF; --text: #0D1B3E; --muted: #6B7A99; --border: #E2E8F8;
+  --green: #12B76A; --red: #F04438; --purple: #7C3AED;
+  --grad: linear-gradient(135deg,#002970 0%,#005BC4 50%,#00BAF2 100%);
+  --r: 14px; --sh: 0 4px 24px rgba(0,41,112,.10); --sh-lg: 0 12px 48px rgba(0,41,112,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);min-height:100vh;overflow-x:hidden}
+.hidden{display:none!important}
+a{text-decoration:none;color:inherit}
+
+/* ── NAV ── */
+nav{background:var(--navy);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:30px;height:30px;background:var(--grad);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:13px}
+.nav-title{font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:17px;letter-spacing:-0.5px}
+.nav-title span{color:var(--sky)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nbadge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.3px}
+.nbadge-blue{background:rgba(0,186,242,.15);border:1px solid rgba(0,186,242,.3);color:var(--sky)}
+.nbadge-green{background:rgba(0,212,170,.15);border:1px solid rgba(0,212,170,.3);color:var(--teal);cursor:pointer}
+.nbadge-warn{background:rgba(255,184,0,.15);border:1px solid rgba(255,184,0,.3);color:var(--warn)}
+
+/* ── HERO ── */
+.hero{background:var(--grad);padding:56px 24px 72px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(0,186,242,.25) 0%,transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(124,58,237,.2) 0%,transparent 50%);pointer-events:none}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 15px;color:rgba(255,255,255,.85);font-size:11px;font-weight:600;letter-spacing:.6px;margin-bottom:18px;text-transform:uppercase}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.9rem,5vw,3rem);color:#fff;line-height:1.1;letter-spacing:-1px;margin-bottom:14px}
+.hero h1 .hi{color:var(--sky)}
+.hero p{color:rgba(255,255,255,.75);font-size:1rem;max-width:520px;margin:0 auto 28px;line-height:1.65}
+.hero-stats{display:flex;justify-content:center;gap:36px;flex-wrap:wrap}
+.hs{text-align:center}
+.hs .v{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#fff}
+.hs .l{font-size:11px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px}
+
+/* ── LAYOUT ── */
+.shell{max-width:1260px;margin:0 auto;padding:28px 18px}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:3px;background:#E2E8F8;border-radius:12px;padding:4px;margin-bottom:26px;overflow-x:auto}
+.tb{padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;border:none;background:transparent;font-family:inherit;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tb.active{background:#fff;color:var(--blue);box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.tb .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.4}
+.tb.active .dot{opacity:1;background:var(--green)}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border)}
+.card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--blue);margin-bottom:5px}
+.card-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+
+/* ── FORM ── */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select{border:2px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;color:var(--text);transition:all .2s;background:#fff}
+.field input:focus,.field select:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px rgba(0,186,242,.12)}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{padding:7px 13px;border-radius:20px;border:2px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;background:#fff;color:var(--muted)}
+.tag:hover{border-color:var(--sky);color:var(--blue)}
+.tag.sel{border-color:var(--blue);background:var(--blue);color:#fff}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;border-radius:11px;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn-p{background:var(--grad);color:#fff;box-shadow:0 4px 16px rgba(0,91,196,.3)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,91,196,.4)}
+.btn-s{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+.btn-g{background:transparent;color:var(--muted);border:2px solid var(--border)}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:8px}
+.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:24px}
+
+/* ── PLAN CARDS ── */
+.plans-col{display:flex;flex-direction:column;gap:14px}
+.pc{background:var(--card);border-radius:var(--r);border:2px solid var(--border);overflow:hidden;transition:all .25s;cursor:pointer;position:relative}
+.pc:hover{border-color:var(--sky);box-shadow:var(--sh-lg);transform:translateY(-2px)}
+.pc.rec{border-color:var(--blue)}
+.pc.top{border-color:var(--teal)}
+.pc-strip{height:4px}
+.rec .pc-strip{background:var(--grad)}
+.top .pc-strip{background:linear-gradient(90deg,var(--teal),#00F5CC)}
+.pc-head{display:flex;align-items:flex-start;padding:18px 22px 14px;gap:14px;border-bottom:1px solid var(--border)}
+.pc-logo{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;color:#fff}
+.pc-info{flex:1}
+.pc-name{font-weight:700;font-size:14px;margin-bottom:2px}
+.pc-ins{font-size:12px;color:var(--muted)}
+.pc-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700}
+.b-blue{background:rgba(0,41,112,.08);color:var(--blue)}
+.b-green{background:rgba(18,183,106,.1);color:var(--green)}
+.b-warn{background:rgba(255,184,0,.12);color:#B45309}
+.b-teal{background:rgba(0,212,170,.1);color:#059669}
+.b-purple{background:rgba(124,58,237,.1);color:var(--purple)}
+.pc-price{text-align:right;flex-shrink:0}
+.pc-price .amt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;color:var(--blue)}
+.pc-price .per{font-size:11px;color:var(--muted)}
+.pc-price .yr{font-size:11px;color:var(--green);font-weight:600}
+.pc-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0;padding:0 22px}
+.pc-stat{padding:12px 0;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.pc-stat:last-child{border-right:none}
+.pc-stat .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.pc-stat .sv{font-size:13px;font-weight:600}
+.pc-foot{display:flex;align-items:center;padding:14px 22px;gap:10px;flex-wrap:wrap}
+.score-w{flex:1;min-width:110px}
+.score-w .sl{font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between}
+.sbar{height:5px;background:#E2E8F8;border-radius:3px;overflow:hidden}
+.sfill{height:100%;border-radius:3px;background:var(--grad);transition:width 1s ease}
+.pc-acts{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ── FILTER BAR ── */
+.fbar{display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.fchip{padding:7px 14px;border-radius:20px;border:2px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;background:#fff}
+.fchip:hover{border-color:var(--sky)}
+.fchip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.sort-sel{padding:7px 11px;border:2px solid var(--border);border-radius:9px;font-size:12px;font-family:inherit;cursor:pointer;margin-left:auto}
+
+/* ── REC HERO ── */
+.rh{background:var(--grad);border-radius:var(--r);padding:26px;color:#fff;margin-bottom:22px;position:relative;overflow:hidden}
+.rh::after{content:'★ AI ENGINE';position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border-radius:6px;padding:3px 9px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.rh h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:6px}
+.rh p{opacity:.8;font-size:13px;line-height:1.6}
+.rh-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.rh-tag{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:6px 13px;font-size:12px;font-weight:500}
+
+/* ── COMPARE ── */
+.ctbl{width:100%;border-collapse:collapse;font-size:12px}
+.ctbl th{background:var(--navy);color:#fff;padding:11px 15px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.ctbl td{padding:11px 15px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ctbl tr:hover td{background:rgba(0,41,112,.03)}
+.ctbl .yes{color:var(--green);font-weight:600}
+.ctbl .no{color:var(--red)}
+.ctbl .best{background:rgba(0,212,170,.08);font-weight:700;color:var(--green)}
+.ox{overflow-x:auto}
+
+/* ── ANALYTICS ── */
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:22px}
+.mc{background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--border);text-align:center}
+.mc .v{font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;color:var(--blue);margin-bottom:3px}
+.mc .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.mc .d{font-size:11px;font-weight:600;margin-top:5px}
+.d-up{color:var(--green)}.d-dn{color:var(--red)}
+.fw{background:var(--card);border-radius:var(--r);padding:22px;border:1px solid var(--border)}
+.fstep{display:flex;align-items:center;gap:12px;padding:10px 0}
+.flbl{width:160px;font-size:12px;font-weight:600;flex-shrink:0}
+.fbbg{flex:1;height:26px;background:#E2E8F8;border-radius:5px;overflow:hidden}
+.fbfill{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:9px;font-size:11px;font-weight:600;color:#fff;transition:width 1.2s ease}
+.fct{width:55px;text-align:right;font-size:12px;font-weight:700}
+.fpct{width:42px;text-align:right;font-size:11px;color:var(--muted)}
+
+/* ── A/B ── */
+.abg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.abv{border-radius:12px;padding:18px;border:2px solid var(--border)}
+.abv.win{border-color:var(--green);background:rgba(18,183,106,.04)}
+.abv .vtag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.abm{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.abm:last-child{border-bottom:none}
+.abm .al{color:var(--muted)}
+.abm .av{font-weight:700}
+.cbar{height:7px;background:#E2E8F8;border-radius:4px;margin-top:11px;overflow:hidden}
+.cfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--teal))}
+.wcrown{display:inline-flex;align-items:center;gap:3px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;margin-left:6px}
+
+/* ── SEGMENTS ── */
+.sgcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.sgc{border-radius:12px;padding:16px;border:2px solid var(--border);background:var(--card);text-align:center}
+.sgico{font-size:1.9rem;margin-bottom:6px}
+.sgn{font-weight:700;font-size:13px;margin-bottom:3px}
+.sgct{font-size:11px;color:var(--muted);margin-bottom:10px}
+.sgbar{height:5px;background:#E2E8F8;border-radius:3px;overflow:hidden}
+.sgfill{height:100%;border-radius:3px}
+
+/* ── EVENT LOG ── */
+.evlog{background:var(--navy);border-radius:11px;padding:14px;max-height:220px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:11px}
+.evrow{color:rgba(255,255,255,.65);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;gap:8px;flex-wrap:wrap}
+.evts{color:var(--sky)}.evname{color:var(--teal)}.evprop{color:rgba(255,255,255,.45)}
+
+/* ── API STATUS PANEL ── */
+.api-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:22px}
+.api-card{border-radius:12px;padding:18px;border:2px solid var(--border);background:var(--card);position:relative;overflow:hidden}
+.api-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.api-up::before{background:var(--green)}
+.api-down::before{background:var(--red)}
+.api-warn::before{background:var(--warn)}
+.api-name{font-weight:700;font-size:14px;margin-bottom:3px}
+.api-url{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px}
+.api-meta{display:flex;justify-content:space-between;font-size:11px}
+.api-status{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:11px}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.dot-down{width:7px;height:7px;border-radius:50%;background:var(--red)}
+.dot-warn{width:7px;height:7px;border-radius:50%;background:var(--warn);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.req-log{background:#0a0e1a;border-radius:9px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:11px;max-height:180px;overflow-y:auto;margin-top:12px}
+.req-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.req-method{font-weight:700;width:42px;flex-shrink:0}
+.req-200{color:#12B76A}.req-201{color:#12B76A}.req-400{color:var(--red)}.req-500{color:var(--red)}.req-path{color:rgba(255,255,255,.7);flex:1}.req-ms{color:rgba(255,255,255,.35);width:52px;text-align:right}
+.req-GET{color:var(--sky)}.req-POST{color:#F59E0B}.req-PUT{color:var(--purple)}.req-DELETE{color:var(--red)}
+
+/* ── JIRA BOARD ── */
+.jira-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.jira-sprint{background:rgba(0,186,242,.1);border:1px solid rgba(0,186,242,.3);color:var(--sky);font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px}
+.sprint-meta{display:flex;gap:14px;font-size:12px;color:var(--muted)}
+.sprint-meta strong{color:var(--text)}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;min-width:900px}
+.kb-col{background:rgba(0,41,112,.04);border-radius:12px;padding:14px;border:1px solid var(--border)}
+.kb-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.kb-count{background:var(--border);color:var(--muted);border-radius:20px;padding:1px 8px;font-size:10px}
+.ticket{background:var(--card);border-radius:9px;padding:13px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer;transition:all .2s;position:relative}
+.ticket:hover{box-shadow:0 4px 14px rgba(0,41,112,.12);border-color:var(--sky)}
+.ticket-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:5px}
+.ticket-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.4}
+.ticket-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px}
+.priority{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+.p-high{background:rgba(240,68,56,.1);color:var(--red)}
+.p-med{background:rgba(255,184,0,.1);color:#B45309}
+.p-low{background:rgba(18,183,106,.1);color:var(--green)}
+.story-pts{background:rgba(0,41,112,.08);color:var(--blue);font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+.ticket-type{font-size:10px;font-weight:600;color:var(--muted)}
+.assignee{width:22px;height:22px;border-radius:50%;background:var(--grad);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.ticket-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.ttag{font-size:9px;font-weight:600;padding:1px 6px;border-radius:3px;background:rgba(0,41,112,.06);color:var(--blue)}
+.epic-bar{height:3px;position:absolute;top:0;left:0;right:0;border-radius:9px 9px 0 0}
+.burndown{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.burndown-chart{background:var(--card);border-radius:12px;padding:18px;border:1px solid var(--border)}
+.velocity-bars{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:12px}
+.vbar-w{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.vbar{width:100%;border-radius:4px 4px 0 0;background:var(--grad);min-height:4px;transition:height .6s ease}
+.vbar-l{font-size:9px;color:var(--muted)}
+.bd-line{position:relative;height:90px;margin-top:12px}
+
+/* ── FIGMA PRD ── */
+.prd-nav{display:flex;gap:0;margin-bottom:20px;overflow-x:auto}
+.prd-tab{padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);white-space:nowrap;transition:all .2s}
+.prd-tab.on{border-bottom-color:var(--blue);color:var(--blue)}
+.prd-grid{display:grid;grid-template-columns:300px 1fr;gap:20px}
+.prd-sidebar{background:var(--card);border-radius:var(--r);padding:18px;border:1px solid var(--border);height:fit-content}
+.prd-content{background:var(--card);border-radius:var(--r);padding:24px;border:1px solid var(--border)}
+.prd-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.prd-section:last-child{border-bottom:none;margin-bottom:0}
+.prd-h{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--blue);margin-bottom:10px}
+.prd-body{font-size:13px;color:var(--text);line-height:1.7}
+.prd-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.prd-table th{background:rgba(0,41,112,.06);padding:8px 12px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.prd-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.prd-table tr:last-child td{border-bottom:none}
+.wireframe{background:rgba(0,41,112,.03);border:2px dashed var(--border);border-radius:10px;padding:16px;margin:12px 0;position:relative}
+.wf-label{position:absolute;top:-10px;left:12px;background:var(--surface);color:var(--muted);font-size:10px;font-weight:700;padding:0 8px;text-transform:uppercase;letter-spacing:.4px}
+.wf-component{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:10px 14px;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.wf-type{font-size:10px;color:var(--muted);font-weight:400}
+.status-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700}
+.sc-draft{background:rgba(107,122,153,.1);color:var(--muted)}
+.sc-review{background:rgba(255,184,0,.12);color:#B45309}
+.sc-approved{background:rgba(18,183,106,.1);color:var(--green)}
+.sc-live{background:rgba(0,186,242,.1);color:#0076C8}
+.metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.mr-card{background:rgba(0,41,112,.04);border-radius:8px;padding:12px;text-align:center}
+.mr-v{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--blue)}
+.mr-l{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ── TOAST ── */
+.toasts{position:fixed;bottom:22px;right:22px;z-index:999;display:flex;flex-direction:column;gap:9px}
+.toast{background:var(--navy);color:#fff;padding:11px 18px;border-radius:9px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:9px;box-shadow:var(--sh-lg);transform:translateX(130%);transition:transform .35s cubic-bezier(0.34,1.56,0.64,1);max-width:300px}
+.toast.show{transform:translateX(0)}
+
+/* ── MISC ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.section-divider{height:1px;background:var(--border);margin:20px 0}
+.insight-box{background:rgba(0,41,112,.04);border:1px solid rgba(0,41,112,.1);border-radius:10px;padding:14px}
+.insight-box .ih{font-weight:700;font-size:13px;color:var(--blue);margin-bottom:6px}
+.insight-box p{font-size:12px;color:var(--text);line-height:1.7}
+.tag-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(0,41,112,.06);padding:1px 5px;border-radius:4px;color:var(--blue)}
+.steps-row{display:flex;align-items:center;gap:8px;margin-bottom:26px;overflow-x:auto;padding-bottom:4px}
+.st{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.st-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;transition:all .3s;flex-shrink:0}
+.st.act .st-dot{background:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(0,41,112,.15)}
+.st.done .st-dot{background:var(--green);color:#fff}
+.st.pend .st-dot{background:#E2E8F8;color:var(--muted)}
+.st-lbl{font-size:12px;font-weight:600;color:var(--muted)}
+.st.act .st-lbl{color:var(--blue)}
+.st.done .st-lbl{color:var(--green)}
+.st-line{flex:1;height:2px;background:#E2E8F8;min-width:20px}
+.st.done .st-line{background:var(--green)}
+
+@media(max-width:768px){
+  .kanban{grid-template-columns:repeat(2,1fr)}
+  .prd-grid{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .abg{grid-template-columns:1fr}
+  .burndown{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .hero h1{font-size:1.8rem}
+  .hero-stats{gap:20px}
+  .fg{grid-template-columns:1fr}
+  .kanban{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">PC</div>
+    <div class="nav-title">Pay<span>Cover</span> <span style="font-size:10px;font-weight:400;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;letter-spacing:.5px">PRO</span></div>
+  </div>
+  <div class="nav-right">
+    <span class="nbadge nbadge-blue">PIBPL Powered</span>
+    <span class="nbadge nbadge-green" id="ab-badge">⚗ Variant A</span>
+    <span class="nbadge nbadge-warn" id="api-status-badge">● API Live</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-pill">🏆 Paytm Insurance Product Management Case Study</div>
+  <h1>Smart Insurance<br>for <span class="hi">Every Indian</span></h1>
+  <p>AI-powered recommendation engine · A/B tested · Analytics-first product built for PIBPL's scale</p>
+  <div class="hero-stats">
+    <div class="hs"><div class="v">50+</div><div class="l">Plans</div></div>
+    <div class="hs"><div class="v">4</div><div class="l">Insurance Types</div></div>
+    <div class="hs"><div class="v">14</div><div class="l">AI Parameters</div></div>
+    <div class="hs"><div class="v">94.3%</div><div class="l">A/B Confidence</div></div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- STEPPER -->
+  <div class="steps-row" id="stepper">
+    <div class="st act" data-s="0"><div class="st-dot">1</div><div class="st-lbl">Profile</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="1"><div class="st-dot">2</div><div class="st-lbl">Browse</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="2"><div class="st-dot">3</div><div class="st-lbl">AI Picks</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="3"><div class="st-dot">4</div><div class="st-lbl">Compare</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="4"><div class="st-dot">5</div><div class="st-lbl">PM Dashboard</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="5"><div class="st-dot">6</div><div class="st-lbl">Backend API</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="6"><div class="st-dot">7</div><div class="st-lbl">Jira Board</div></div>
+    <div class="st-line"></div>
+    <div class="st pend" data-s="7"><div class="st-dot">8</div><div class="st-lbl">Figma PRD</div></div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tb active" onclick="go('profile')"><span class="dot"></span>👤 Profile</button>
+    <button class="tb" onclick="go('plans')"><span class="dot"></span>📋 Browse Plans</button>
+    <button class="tb" onclick="go('recommend')"><span class="dot"></span>🤖 AI Picks</button>
+    <button class="tb" onclick="go('compare')"><span class="dot"></span>⚖️ Compare</button>
+    <button class="tb" onclick="go('analytics')"><span class="dot"></span>📊 PM Dashboard</button>
+    <button class="tb" onclick="go('backend')"><span class="dot"></span>🔌 Backend API</button>
+    <button class="tb" onclick="go('jira')"><span class="dot"></span>📌 Jira Board</button>
+    <button class="tb" onclick="go('figma')"><span class="dot"></span>🎨 Figma PRD</button>
+  </div>
+
+  <!-- ══ PROFILE ══ -->
+  <div id="tab-profile">
+    <div class="card">
+      <div class="card-title">Build Your Risk Profile</div>
+      <div class="card-sub">Our AI engine uses 14 parameters to score and rank 50+ plans in real-time. Fill in your profile once — get personalised recommendations forever.</div>
+      <div class="fg">
+        <div class="field"><label>Full Name</label><input type="text" id="f-name" placeholder="e.g. Rahul Sharma" oninput="track('profile_field',{f:'name'})"></div>
+        <div class="field"><label>Age</label><input type="number" id="f-age" placeholder="e.g. 28" min="18" max="80" oninput="track('profile_field',{f:'age'})"></div>
+        <div class="field"><label>Annual Income (₹)</label>
+          <select id="f-income" onchange="track('profile_field',{f:'income'})">
+            <option value="">Select range</option>
+            <option value="lower">Below ₹3 LPA</option>
+            <option value="lower_middle">₹3–6 LPA</option>
+            <option value="middle">₹6–12 LPA</option>
+            <option value="upper_middle">₹12–25 LPA</option>
+            <option value="high">Above ₹25 LPA</option>
+          </select>
+        </div>
+        <div class="field"><label>City Tier</label>
+          <select id="f-city" onchange="track('profile_field',{f:'city'})">
+            <option value="">Select city</option>
+            <option value="metro">Metro (Delhi/Mumbai/Bangalore)</option>
+            <option value="tier1">Tier 1 City</option>
+            <option value="tier2">Tier 2 City</option>
+            <option value="rural">Rural / Small Town</option>
+          </select>
+        </div>
+        <div class="field"><label>Family Size</label>
+          <select id="f-family" onchange="track('profile_field',{f:'family'})">
+            <option value="">Select</option>
+            <option value="single">Just Me</option>
+            <option value="couple">Me + Spouse</option>
+            <option value="small_family">Me + Spouse + 1–2 Kids</option>
+            <option value="large_family">Large Family (5+)</option>
+          </select>
+        </div>
+        <div class="field"><label>Employment</label>
+          <select id="f-emp" onchange="track('profile_field',{f:'employment'})">
+            <option value="">Select</option>
+            <option value="salaried">Salaried (Private)</option>
+            <option value="govt">Government Employee</option>
+            <option value="self_employed">Self-Employed</option>
+            <option value="freelancer">Freelancer / Gig Worker</option>
+            <option value="student">Student</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:20px">
+        <div class="field" style="margin-bottom:12px"><label>Insurance Types Needed</label></div>
+        <div class="tags" id="type-tags">
+          <span class="tag" data-v="Health Insurance" onclick="toggleTag(this)">🏥 Health</span>
+          <span class="tag" data-v="Term Life" onclick="toggleTag(this)">🛡 Term Life</span>
+          <span class="tag" data-v="Car/Motor" onclick="toggleTag(this)">🚗 Motor</span>
+          <span class="tag" data-v="Travel Insurance" onclick="toggleTag(this)">✈️ Travel</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="field" style="margin-bottom:12px"><label>Health Conditions</label></div>
+        <div class="tags" id="health-tags">
+          <span class="tag" data-v="diabetes" onclick="toggleTag(this)">Diabetes</span>
+          <span class="tag" data-v="hypertension" onclick="toggleTag(this)">Hypertension</span>
+          <span class="tag" data-v="cardiac" onclick="toggleTag(this)">Heart Condition</span>
+          <span class="tag" data-v="none" onclick="toggleTag(this)">None / Healthy ✓</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="field" style="margin-bottom:12px"><label>What Matters Most</label></div>
+        <div class="tags" id="priority-tags">
+          <span class="tag" data-v="low_premium" onclick="toggleTag(this)">💰 Low Premium</span>
+          <span class="tag" data-v="high_cover" onclick="toggleTag(this)">🏥 Max Coverage</span>
+          <span class="tag" data-v="claim_speed" onclick="toggleTag(this)">⚡ Fast Claims</span>
+          <span class="tag" data-v="digital" onclick="toggleTag(this)">📱 Digital First</span>
+          <span class="tag" data-v="hospital_network" onclick="toggleTag(this)">🏨 Wide Network</span>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-p" onclick="submitProfile()">Find My Plans →</button>
+        <button class="btn btn-g btn-sm" onclick="demo()">⚡ Demo Autofill</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PLANS ══ -->
+  <div id="tab-plans" class="hidden">
+    <div class="fbar">
+      <button class="fchip on" data-t="all" onclick="filterPlans('all',this)">All Plans</button>
+      <button class="fchip" data-t="Health Insurance" onclick="filterPlans('Health Insurance',this)">🏥 Health</button>
+      <button class="fchip" data-t="Term Life" onclick="filterPlans('Term Life',this)">🛡 Term</button>
+      <button class="fchip" data-t="Car/Motor" onclick="filterPlans('Car/Motor',this)">🚗 Motor</button>
+      <button class="fchip" data-t="Travel Insurance" onclick="filterPlans('Travel Insurance',this)">✈️ Travel</button>
+      <select class="sort-sel" onchange="sortPlans(this.value)">
+        <option value="score">Best Match</option>
+        <option value="asc">Premium: Low→High</option>
+        <option value="desc">Premium: High→Low</option>
+        <option value="csr">Claim Ratio</option>
+        <option value="rating">Rating</option>
+      </select>
+    </div>
+    <div class="plans-col" id="plans-grid"></div>
+  </div>
+
+  <!-- ══ RECOMMEND ══ -->
+  <div id="tab-recommend" class="hidden">
+    <div id="rec-hero-wrap"></div>
+    <div class="plans-col" id="rec-grid"></div>
+  </div>
+
+  <!-- ══ COMPARE ══ -->
+  <div id="tab-compare" class="hidden">
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title">Side-by-Side Comparison</div>
+      <div class="card-sub">Compare up to 4 plans across 20+ parameters. Green = best in class for that attribute.</div>
+      <div id="compare-selection" style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px"></div>
+      <button class="btn btn-s btn-sm" onclick="buildCompare()">Refresh Compare →</button>
+    </div>
+    <div class="card ox"><table class="ctbl" id="compare-table"></table></div>
+  </div>
+
+  <!-- ══ PM DASHBOARD ══ -->
+  <div id="tab-analytics" class="hidden">
+    <div class="tab-bar" style="margin-bottom:18px">
+      <button class="tb active" onclick="switchATab('overview')"><span class="dot"></span>📈 Overview</button>
+      <button class="tb" onclick="switchATab('funnel')"><span class="dot"></span>🔽 Funnel</button>
+      <button class="tb" onclick="switchATab('ab')"><span class="dot"></span>⚗ A/B Tests</button>
+      <button class="tb" onclick="switchATab('segments')"><span class="dot"></span>👥 Segments</button>
+      <button class="tb" onclick="switchATab('events')"><span class="dot"></span>📡 Event Log</button>
+    </div>
+    <div id="atab-overview"><div class="ag" id="metrics-grid"></div><div class="card" id="trend-card"></div></div>
+    <div id="atab-funnel" class="hidden">
+      <div class="card">
+        <div class="card-title">Acquisition Funnel</div>
+        <div class="card-sub">Full journey from page load → purchase. Drop-off analysis drives roadmap prioritisation.</div>
+        <div id="funnel-steps"></div>
+        <div class="insight-box" style="margin-top:16px">
+          <div class="ih">🎯 PM Insight — Biggest Drop-off Opportunity</div>
+          <p>38% of users drop between <strong>Profile Complete → Plan Browse</strong>. Root cause: 6-field form is friction-heavy. <br><strong>Hypothesis:</strong> Progressive profiling (3 fields → show plans → collect rest later) will lift CVR by +12–18%. <strong>Priority: P0 for next sprint.</strong></p>
+        </div>
+      </div>
+    </div>
+    <div id="atab-ab" class="hidden">
+      <div class="card" style="margin-bottom:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div><div class="card-title">A/B Test: CTA Copy Experiment</div><div class="card-sub" style="margin:0">Test ID: PIBPL-AB-007 | Traffic: 50/50 | Confidence: 94.3%</div></div>
+          <span style="background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:5px 12px;border-radius:7px">● LIVE</span>
+        </div>
+        <div class="abg" id="ab-grid"></div>
+        <div style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px"><span>Statistical Confidence</span><span style="font-weight:700;color:var(--text)">94.3% / 95% threshold</span></div>
+          <div class="cbar"><div class="cfill" style="width:94.3%"></div></div>
+          <div style="margin-top:10px;font-size:11px;color:var(--muted)">Estimated <strong style="color:var(--blue)">2 days</strong> to reach significance at current traffic rate. Recommend shipping Variant B once threshold is crossed.</div>
+        </div>
+      </div>
+      <div class="card"><div class="card-title" style="margin-bottom:14px">All Experiments</div><div id="all-exps"></div></div>
+    </div>
+    <div id="atab-segments" class="hidden">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">User Segments</div>
+        <div class="card-sub">Cohort analysis powers personalised nudges, targeted pricing, and feature prioritisation by segment.</div>
+        <div class="sgcards" id="seg-cards"></div>
+      </div>
+      <div class="card"><div class="card-title" style="margin-bottom:14px">Segment × Insurance Interest Heatmap</div><div id="heatmap"></div></div>
+    </div>
+    <div id="atab-events" class="hidden">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div><div class="card-title">Live Event Stream</div><div class="card-sub" style="margin:0">Mixpanel-style event tracking. Every user action → structured JSON event → analytics pipeline.</div></div>
+          <button class="btn btn-g btn-sm" onclick="clearLog()">Clear</button>
+        </div>
+        <div class="evlog" id="ev-log"></div>
+        <div class="insight-box" style="margin-top:14px">
+          <div class="ih">📱 How to connect to real Mixpanel</div>
+          <p>Replace <code>track()</code> calls with <code>mixpanel.track(event, props)</code>. All events already structured with session ID, AB variant, timestamp — drop-in ready for Mixpanel, Amplitude, or Segment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BACKEND API ══ -->
+  <div id="tab-backend" class="hidden">
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-title">Backend Architecture Simulation</div>
+      <div class="card-sub">Simulated Node.js / Express REST API with live request logging, latency simulation, and error handling. In production: swap mock responses for real DB calls.</div>
+      <div class="tag-wrap" style="margin-bottom:16px">
+        <span class="chip b-blue">Node.js + Express</span>
+        <span class="chip b-teal">PostgreSQL</span>
+        <span class="chip b-green">Redis Cache</span>
+        <span class="chip b-purple">JWT Auth</span>
+        <span class="chip b-warn">Rate Limiting</span>
+      </div>
+    </div>
+
+    <div class="api-grid" id="api-grid"></div>
+
+    <div class="two-col" style="margin-bottom:18px">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">Live Request Log</div>
+        <div class="req-log" id="req-log"><div class="req-row"><span class="req-GET req-method">GET</span><span class="req-path">/api/v1/plans</span><span class="req-200" style="width:32px">200</span><span class="req-ms">142ms</span></div></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-s btn-sm" onclick="callAPI('GET','/api/v1/plans')">GET /plans</button>
+          <button class="btn btn-s btn-sm" onclick="callAPI('POST','/api/v1/quote')">POST /quote</button>
+          <button class="btn btn-s btn-sm" onclick="callAPI('GET','/api/v1/user/profile')">GET /profile</button>
+          <button class="btn btn-s btn-sm" onclick="callAPI('POST','/api/v1/analytics/event')">POST /event</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">API Response Preview</div>
+        <div class="req-log" id="api-resp" style="max-height:220px;color:rgba(255,255,255,.7);font-size:10px;white-space:pre-wrap">// Click any API button to see mock response
+{
+  "status": "ready",
+  "env": "production-mock",
+  "version": "v1.4.2",
+  "services": {
+    "db": "connected",
+    "cache": "hit",
+    "queue": "online"
+  }
+}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">Database Schema (PostgreSQL)</div>
+      <div class="req-log" style="max-height:280px;font-size:10px;white-space:pre;color:rgba(255,255,255,.7)">-- Users Table
+CREATE TABLE users (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        VARCHAR(100) NOT NULL,
+  email       VARCHAR(150) UNIQUE NOT NULL,
+  age         INT CHECK (age >= 18 AND age <= 80),
+  income_band VARCHAR(20),
+  city_tier   VARCHAR(10),
+  family_size VARCHAR(20),
+  ab_variant  CHAR(1) DEFAULT 'A',
+  created_at  TIMESTAMPTZ DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Insurance Plans Table
+CREATE TABLE insurance_plans (
+  id                  VARCHAR(10) PRIMARY KEY,
+  insurer             VARCHAR(100),
+  type                VARCHAR(30),
+  name                VARCHAR(150),
+  monthly_premium     DECIMAL(10,2),
+  annual_premium      DECIMAL(10,2),
+  sum_insured         BIGINT,
+  csr                 DECIMAL(5,2),  -- Claim Settlement Ratio
+  network_hospitals   INT,
+  rating              DECIMAL(3,1),
+  cashless            BOOLEAN,
+  maternity           BOOLEAN,
+  digital             BOOLEAN,
+  telemedicine        BOOLEAN,
+  created_at          TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- User Sessions (Analytics)
+CREATE TABLE sessions (
+  session_id    VARCHAR(20) PRIMARY KEY,
+  user_id       UUID REFERENCES users(id),
+  ab_variant    CHAR(1),
+  device        VARCHAR(20),
+  started_at    TIMESTAMPTZ DEFAULT NOW(),
+  last_active   TIMESTAMPTZ DEFAULT NOW(),
+  events_count  INT DEFAULT 0
+);
+
+-- Events (Mixpanel-style)
+CREATE TABLE events (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id    VARCHAR(20),
+  event_name    VARCHAR(100),
+  properties    JSONB,
+  ab_variant    CHAR(1),
+  timestamp     TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Quotes
+CREATE TABLE quotes (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id       UUID REFERENCES users(id),
+  plan_id       VARCHAR(10) REFERENCES insurance_plans(id),
+  premium       DECIMAL(10,2),
+  status        VARCHAR(20) DEFAULT 'pending',
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);</div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="card-title" style="margin-bottom:12px">Sample API Endpoints</div>
+      <table class="ctbl">
+        <thead><tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Description</th><th>Response Time</th></tr></thead>
+        <tbody id="api-endpoints-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ JIRA BOARD ══ -->
+  <div id="tab-jira" class="hidden">
+    <div class="jira-header">
+      <div>
+        <div class="card-title">Sprint Board — Sprint 14</div>
+        <div style="font-size:13px;color:var(--muted)">Project: PIBPL-PAYCOVER | Team: Insurance Product Squad</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span class="jira-sprint">🏃 Sprint 14 — Active</span>
+        <span class="chip b-green">Mar 18 – Apr 1, 2025</span>
+      </div>
+    </div>
+    <div class="sprint-meta" style="margin-bottom:18px">
+      <div>Total Story Points: <strong>87</strong></div>
+      <div>Completed: <strong style="color:var(--green)">48</strong></div>
+      <div>Remaining: <strong style="color:var(--warn)">39</strong></div>
+      <div>Velocity: <strong>72 pts/sprint</strong></div>
+      <div>Team Size: <strong>6</strong></div>
+    </div>
+    <div style="overflow-x:auto">
+      <div class="kanban" id="kanban-board"></div>
+    </div>
+    <div class="burndown">
+      <div class="burndown-chart">
+        <div class="card-title" style="font-size:1rem">Sprint Velocity (Last 6 Sprints)</div>
+        <div class="card-sub" style="font-size:11px">Story points completed per sprint</div>
+        <div class="velocity-bars" id="velocity-chart"></div>
+      </div>
+      <div class="burndown-chart">
+        <div class="card-title" style="font-size:1rem">Epic Progress</div>
+        <div class="card-sub" style="font-size:11px">Completion % per epic</div>
+        <div id="epic-progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FIGMA PRD ══ -->
+  <div id="tab-figma" class="hidden">
+    <div class="card" style="margin-bottom:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <div class="card-title">Product Requirements Document</div>
+          <div class="card-sub" style="margin:0">PayCover — Intelligent Insurance Comparison Platform for PIBPL</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span class="status-chip sc-live">● Live v1.4</span>
+          <span class="chip b-blue">PM: You</span>
+          <span class="chip b-teal">PM Stage: Validated</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prd-nav" id="prd-nav">
+      <div class="prd-tab on" onclick="switchPRD('overview',this)">📋 Overview</div>
+      <div class="prd-tab" onclick="switchPRD('problem',this)">🎯 Problem</div>
+      <div class="prd-tab" onclick="switchPRD('ux',this)">🖼 UX Flows</div>
+      <div class="prd-tab" onclick="switchPRD('metrics',this)">📊 Success Metrics</div>
+      <div class="prd-tab" onclick="switchPRD('tech',this)">⚙️ Tech Spec</div>
+      <div class="prd-tab" onclick="switchPRD('risks',this)">⚠️ Risks</div>
+    </div>
+
+    <!-- PRD Sections -->
+    <div id="prd-overview">
+      <div class="prd-grid">
+        <div class="prd-sidebar">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px">Document Info</div>
+          <table class="prd-table">
+            <tr><td style="color:var(--muted);font-size:11px">Version</td><td style="font-weight:700">v1.4.2</td></tr>
+            <tr><td style="color:var(--muted);font-size:11px">Status</td><td><span class="status-chip sc-live">Live</span></td></tr>
+            <tr><td style="color:var(--muted);font-size:11px">PM Owner</td><td style="font-weight:700">You</td></tr>
+            <tr><td style="color:var(--muted);font-size:11px">Eng Lead</td><td style="font-weight:700">Dev Team</td></tr>
+            <tr><td style="color:var(--muted);font-size:11px">Launch</td><td style="font-weight:700">Q1 2025</td></tr>
+            <tr><td style="color:var(--muted);font-size:11px">Scope</td><td style="font-weight:700">Web + App</td></tr>
+          </table>
+          <div class="section-divider"></div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px">Stakeholders</div>
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+            <div>🏢 <strong>PIBPL Business</strong> — Revenue target</div>
+            <div>🧑‍💻 <strong>Engineering</strong> — Technical implementation</div>
+            <div>🎨 <strong>Design</strong> — UX flows + Figma</div>
+            <div>📊 <strong>Data</strong> — Analytics + ML</div>
+            <div>⚖️ <strong>Legal/Compliance</strong> — IRDAI regulations</div>
+          </div>
+        </div>
+        <div class="prd-content">
+          <div class="prd-section">
+            <div class="prd-h">🎯 Executive Summary</div>
+            <div class="prd-body">PayCover is PIBPL's intelligent insurance comparison and recommendation product targeting India's 500M+ underinsured population. The platform aggregates 50+ plans across 4 insurance categories and uses a proprietary AI scoring engine to surface the best-fit plan for each user's unique risk profile — replacing the industry's existing "browse and guess" model with a "profile and recommend" model.</div>
+          </div>
+          <div class="prd-section">
+            <div class="prd-h">🏆 Business Objectives (OKRs)</div>
+            <table class="prd-table">
+              <thead><tr><th>Objective</th><th>Key Result</th><th>Target</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Grow GMV</td><td>Insurance premium GMV from PayCover</td><td>₹50Cr/quarter</td><td><span class="status-chip sc-live">On Track</span></td></tr>
+                <tr><td>Improve CVR</td><td>Profile → Purchase conversion</td><td>3.5% (from 1.66%)</td><td><span class="status-chip sc-review">In Progress</span></td></tr>
+                <tr><td>User Trust</td><td>NPS Score</td><td>≥ 55</td><td><span class="status-chip sc-approved">Achieved (58)</span></td></tr>
+                <tr><td>Retention</td><td>D30 retention rate</td><td>22%</td><td><span class="status-chip sc-review">In Progress</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="prd-section">
+            <div class="prd-h">👤 Target User Personas</div>
+            <div class="prd-body">
+              <strong>Persona 1 — Rahul (27, Software Engineer, Bangalore)</strong><br>
+              First job, no insurance, aware but overwhelmed by options. Needs: simple comparison, digital process, no agents.<br><br>
+              <strong>Persona 2 — Meera (34, Homemaker, Pune)</strong><br>
+              Husband earns ₹8LPA, 2 kids. Needs family floater health + term life. Not tech-savvy.<br><br>
+              <strong>Persona 3 — Arvind (52, Business Owner, Surat)</strong><br>
+              High income, wants comprehensive coverage, premium-insensitive. Needs: top-tier plans, high SI, quick claims.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="prd-problem" class="hidden">
+      <div class="prd-content" style="max-width:800px">
+        <div class="prd-section">
+          <div class="prd-h">🔍 Problem Statement</div>
+          <div class="prd-body">
+            <strong>Core Problem:</strong> India has one of the world's lowest insurance penetration rates (~4.2% of GDP vs 11% global average). The primary barriers are not affordability — they are <em>awareness, trust, and decision-making complexity</em>.
+            <br><br>Users on Paytm Insurance today face: 50+ plans with similar-sounding names, dense comparison tables, heavy agent dependency, and no personalised guidance. The result: 87% of users who enter the funnel never purchase.
+          </div>
+        </div>
+        <div class="prd-section">
+          <div class="prd-h">📊 Market Data</div>
+          <div class="metrics-row">
+            <div class="mr-card"><div class="mr-v">87%</div><div class="mr-l">Funnel Drop-off</div></div>
+            <div class="mr-card"><div class="mr-v">4.2%</div><div class="mr-l">India Insurance GDP %</div></div>
+            <div class="mr-card"><div class="mr-v">500M+</div><div class="mr-l">Underinsured Indians</div></div>
+          </div>
+        </div>
+        <div class="prd-section">
+          <div class="prd-h">✅ Solution Hypothesis</div>
+          <div class="prd-body">If we replace the browse-and-compare model with a profile-and-recommend model — using an AI scoring engine that ingests 14 user parameters and surfaces the top 3 personalised plans with clear reasoning — then we will reduce decision anxiety, increase trust, and lift purchase conversion from 1.66% to 3.5%+.</div>
+        </div>
+        <div class="prd-section">
+          <div class="prd-h">🏁 How We Win vs Competitors</div>
+          <table class="prd-table">
+            <thead><tr><th>Feature</th><th>PayCover</th><th>PolicyBazaar</th><th>Coverfox</th><th>Digit</th></tr></thead>
+            <tbody>
+              <tr><td>AI Recommendation Engine</td><td class="yes">✓ 14 params</td><td>✗ Basic filters</td><td>✗</td><td>✗</td></tr>
+              <tr><td>Paytm UPI Integration</td><td class="yes">✓ 1-click pay</td><td>✗ Redirects</td><td>✗</td><td>✗</td></tr>
+              <tr><td>In-App Claims Tracking</td><td class="yes">✓ Real-time</td><td>Partial</td><td>✗</td><td>✓</td></tr>
+              <tr><td>A/B Test Infrastructure</td><td class="yes">✓ Built-in</td><td>✗</td><td>✗</td><td>✗</td></tr>
+              <tr><td>Vernacular Support</td><td class="yes">✓ 8 languages</td><td>Hindi only</td><td>✗</td><td>✗</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="prd-ux" class="hidden">
+      <div class="prd-content">
+        <div class="prd-section">
+          <div class="prd-h">🖼 User Journey Wireframe</div>
+          <div class="wireframe">
+            <div class="wf-label">Screen 1 — Hero / Landing</div>
+            <div class="wf-component"><span>Hero Banner: "Find the right insurance in 2 mins"</span><span class="wf-type">Banner Component</span></div>
+            <div class="wf-component"><span>CTA Button (A/B tested): "Get My Free Quote →"</span><span class="wf-type">Primary CTA</span></div>
+            <div class="wf-component"><span>Trust indicators: IRDAI approved, 50+ insurers, 1M+ customers</span><span class="wf-type">Social Proof Strip</span></div>
+          </div>
+          <div class="wireframe">
+            <div class="wf-label">Screen 2 — Profile Onboarding (Progressive)</div>
+            <div class="wf-component"><span>Step 1: Age + Income + City (3 fields)</span><span class="wf-type">Progressive Form Step 1</span></div>
+            <div class="wf-component"><span>Step 2: Family size + Employment</span><span class="wf-type">Progressive Form Step 2</span></div>
+            <div class="wf-component"><span>Step 3: Insurance type + Health conditions</span><span class="wf-type">Progressive Form Step 3</span></div>
+            <div class="wf-component"><span>Progress bar + "3 of 3 done" indicator</span><span class="wf-type">Progress Indicator</span></div>
+          </div>
+          <div class="wireframe">
+            <div class="wf-label">Screen 3 — AI Recommendations</div>
+            <div class="wf-component"><span>Top Pick card (highlighted, full-width)</span><span class="wf-type">Hero Plan Card</span></div>
+            <div class="wf-component"><span>Why this plan: 3 reasons (bullet points)</span><span class="wf-type">Reason Module</span></div>
+            <div class="wf-component"><span>Other Plans (2–4 options below)</span><span class="wf-type">Plan Cards List</span></div>
+            <div class="wf-component"><span>Compare CTA → launches side-by-side</span><span class="wf-type">Compare Trigger</span></div>
+          </div>
+          <div class="wireframe">
+            <div class="wf-label">Screen 4 — Purchase Flow</div>
+            <div class="wf-component"><span>Plan summary + premium breakdown</span><span class="wf-type">Order Summary</span></div>
+            <div class="wf-component"><span>Paytm UPI / Wallet / Card payment</span><span class="wf-type">Payment Gateway</span></div>
+            <div class="wf-component"><span>IRDAI disclosure + consent checkbox</span><span class="wf-type">Legal Compliance</span></div>
+            <div class="wf-component"><span>Success state → Policy PDF + Dashboard CTA</span><span class="wf-type">Confirmation Screen</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="prd-metrics" class="hidden">
+      <div class="prd-content">
+        <div class="prd-section">
+          <div class="prd-h">📊 Success Metrics Framework (AARRR + North Star)</div>
+          <div class="prd-body" style="margin-bottom:14px"><strong>North Star Metric:</strong> <em>Policies Purchased Per Month</em> — this is the single metric that drives both user value (protection) and business value (GMV).</div>
+          <table class="prd-table">
+            <thead><tr><th>Stage</th><th>Metric</th><th>Current</th><th>Target</th><th>Tracking Tool</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Acquisition</strong></td><td>Monthly Active Users</td><td>1,36,000</td><td>2,50,000</td><td>Google Analytics</td></tr>
+              <tr><td><strong>Activation</strong></td><td>Profile Completion Rate</td><td>30.75%</td><td>50%</td><td>Mixpanel</td></tr>
+              <tr><td><strong>Revenue</strong></td><td>Purchase CVR</td><td>1.66%</td><td>3.5%</td><td>Mixpanel + CRM</td></tr>
+              <tr><td><strong>Retention</strong></td><td>D30 Return Rate</td><td>14%</td><td>22%</td><td>Mixpanel Cohorts</td></tr>
+              <tr><td><strong>Referral</strong></td><td>NPS Score</td><td>52</td><td>60</td><td>Qualtrics</td></tr>
+              <tr><td><strong>Health</strong></td><td>Claim Success Rate</td><td>94.5%</td><td>96%</td><td>Internal CRM</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="prd-section">
+          <div class="prd-h">🔔 Alert Thresholds (PagerDuty)</div>
+          <table class="prd-table">
+            <thead><tr><th>Metric</th><th>Warning</th><th>Critical</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>CVR (hourly)</td><td>&lt; 1.2%</td><td>&lt; 0.8%</td><td>Rollback last deploy</td></tr>
+              <tr><td>API p99 Latency</td><td>&gt; 800ms</td><td>&gt; 2s</td><td>Scale pod + alert SRE</td></tr>
+              <tr><td>Error Rate</td><td>&gt; 1%</td><td>&gt; 5%</td><td>Incident + P0 page</td></tr>
+              <tr><td>A/B assignment failure</td><td>&gt; 0.1%</td><td>&gt; 1%</td><td>Pause experiment</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="prd-tech" class="hidden">
+      <div class="prd-content">
+        <div class="prd-section">
+          <div class="prd-h">⚙️ Technical Architecture</div>
+          <div class="prd-body" style="margin-bottom:12px">
+            <strong>Frontend:</strong> React 18 + TypeScript + Tailwind CSS. Deployed on Cloudflare Edge (CDN). <br>
+            <strong>Backend:</strong> Node.js + Express REST API. Containerised with Docker, orchestrated on Kubernetes (GKE).<br>
+            <strong>Database:</strong> PostgreSQL (primary) + Redis (cache/sessions) + BigQuery (analytics).<br>
+            <strong>AI Engine:</strong> Python FastAPI service. Rule-based scoring (v1) → ML model (v2 roadmap).<br>
+            <strong>Payments:</strong> Paytm Payment Gateway (direct integration, no redirect).<br>
+            <strong>Analytics:</strong> Mixpanel (product events) + Google Analytics 4 (marketing attribution).
+          </div>
+          <table class="prd-table">
+            <thead><tr><th>Service</th><th>Technology</th><th>SLA</th><th>Owner</th></tr></thead>
+            <tbody>
+              <tr><td>API Gateway</td><td>Kong + Node.js</td><td>99.9%</td><td>Platform Eng</td></tr>
+              <tr><td>Recommendation Engine</td><td>Python FastAPI</td><td>99.5%</td><td>ML Team</td></tr>
+              <tr><td>Payment Service</td><td>Paytm PG SDK</td><td>99.95%</td><td>Payments Eng</td></tr>
+              <tr><td>Notification Service</td><td>Firebase + SNS</td><td>99%</td><td>Platform Eng</td></tr>
+              <tr><td>Document Storage</td><td>AWS S3 + CDN</td><td>99.99%</td><td>Infra</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="prd-section">
+          <div class="prd-h">🔐 Compliance & Security</div>
+          <div class="prd-body">
+            <strong>IRDAI Compliance:</strong> All plans must display IRDAI registration number. Mandatory disclosure before purchase (as per Insurance Act 1938).<br><br>
+            <strong>Data Security:</strong> All PII encrypted at rest (AES-256) and in transit (TLS 1.3). DPDP Act 2023 compliant — explicit consent, data minimisation, right to erasure.<br><br>
+            <strong>KYC/AML:</strong> Aadhaar-based eKYC (UIDAI API) for policies above ₹50,000 annual premium.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="prd-risks" class="hidden">
+      <div class="prd-content">
+        <div class="prd-section">
+          <div class="prd-h">⚠️ Risk Register</div>
+          <table class="prd-table">
+            <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th><th>Owner</th></tr></thead>
+            <tbody>
+              <tr><td>AI engine recommends suboptimal plan</td><td><span class="priority p-med">Medium</span></td><td>High</td><td>Human review layer + feedback loop. Monthly model accuracy audit.</td><td>ML Team</td></tr>
+              <tr><td>IRDAI regulation change</td><td><span class="priority p-low">Low</span></td><td>High</td><td>Dedicated legal review sprint every quarter. Compliance checklist in PRD.</td><td>Legal</td></tr>
+              <tr><td>Insurer API downtime</td><td><span class="priority p-high">High</span></td><td>Medium</td><td>Cached plan data (TTL: 24h). Graceful degradation to static data.</td><td>SRE</td></tr>
+              <tr><td>Payment drop-off &gt; 15%</td><td><span class="priority p-med">Medium</span></td><td>High</td><td>A/B test payment screen. OTP-less flow. EMI options.</td><td>PM</td></tr>
+              <tr><td>User data breach</td><td><span class="priority p-low">Low</span></td><td>Critical</td><td>Pen test quarterly. Bug bounty program. Incident response playbook.</td><td>Security</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="prd-section">
+          <div class="prd-h">🗓 Roadmap</div>
+          <table class="prd-table">
+            <thead><tr><th>Phase</th><th>Timeline</th><th>Features</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>v1.0</td><td>Q4 2024</td><td>Profile + Browse + Basic Recommendation</td><td><span class="status-chip sc-approved">Shipped</span></td></tr>
+              <tr><td>v1.4</td><td>Q1 2025</td><td>AI scoring engine + A/B framework + Compare</td><td><span class="status-chip sc-live">Live</span></td></tr>
+              <tr><td>v2.0</td><td>Q2 2025</td><td>ML recommendation model + UPI integration + Claims tracker</td><td><span class="status-chip sc-review">In Progress</span></td></tr>
+              <tr><td>v2.5</td><td>Q3 2025</td><td>Vernacular support + Tier 2/3 expansion + Agent marketplace</td><td><span class="status-chip sc-draft">Planned</span></td></tr>
+              <tr><td>v3.0</td><td>Q4 2025</td><td>Auto-renewal engine + Portfolio view + Cross-sell nudges</td><td><span class="status-chip sc-draft">Planned</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+// ══════════════════════════════
+//  PAYCOVER PRO — PRODUCTION ENGINE v2.0
+//  Full stack simulation: Backend API + Analytics + A/B + Jira + PRD
+// ══════════════════════════════
+
+// ── SESSION & A/B ──
+const SID = 'px_' + Math.random().toString(36).substr(2,8);
+const abVariant = Math.random() < 0.5 ? 'A' : 'B';
+let userProfile = null;
+let selectedPlans = [];
+let reqCount = 0;
+
+// ── PLAN DATA (50 plans sourced from CSV) ──
+const PLANS = [
+  {id:'H001',ins:'Star Health',type:'Health Insurance',name:'Star Comprehensive',mo:1299,an:14999,si:500000,csr:94.44,hosp:9800,rt:4.2,tier:'Premium',cash:true,mat:true,men:true,cop:10,ncb:20,res:true,dig:true,tele:true,col:'#E53E3E',sc:'SH'},
+  {id:'H002',ins:'HDFC ERGO',type:'Health Insurance',name:'My:health Suraksha',mo:899,an:9999,si:300000,csr:98.0,hosp:11000,rt:4.5,tier:'Budget',cash:true,mat:false,men:false,cop:0,ncb:25,res:true,dig:true,tele:true,col:'#2D6EE8',sc:'HE'},
+  {id:'H003',ins:'Niva Bupa',type:'Health Insurance',name:'ReAssure 2.0',mo:1599,an:17999,si:1000000,csr:91.6,hosp:8600,rt:4.4,tier:'Super Premium',cash:true,mat:true,men:true,cop:0,ncb:50,res:true,dig:true,tele:true,col:'#7B2FBE',sc:'NB'},
+  {id:'H004',ins:'Care Health',type:'Health Insurance',name:'Care Supreme',mo:749,an:8499,si:500000,csr:95.2,hosp:16500,rt:4.0,tier:'Budget',cash:true,mat:false,men:false,cop:10,ncb:30,res:true,dig:true,tele:false,col:'#D44000',sc:'CH'},
+  {id:'H005',ins:'ICICI Lombard',type:'Health Insurance',name:'Complete Health',mo:1099,an:12499,si:750000,csr:97.0,hosp:6500,rt:4.3,tier:'Standard',cash:true,mat:true,men:true,cop:0,ncb:20,res:true,dig:true,tele:true,col:'#F57C00',sc:'IL'},
+  {id:'H007',ins:'Aditya Birla',type:'Health Insurance',name:'Activ Assure Diamond',mo:1449,an:16499,si:1000000,csr:97.4,hosp:8000,rt:4.6,tier:'Premium',cash:true,mat:true,men:true,cop:0,ncb:50,res:true,dig:true,tele:true,col:'#C62828',sc:'AB'},
+  {id:'H010',ins:'HDFC ERGO',type:'Health Insurance',name:'Optima Secure',mo:2199,an:24999,si:2000000,csr:98.0,hosp:11000,rt:4.7,tier:'Ultra Premium',cash:true,mat:true,men:true,cop:0,ncb:75,res:true,dig:true,tele:true,col:'#1565C0',sc:'HS'},
+  {id:'H008',ins:'Max Bupa',type:'Health Insurance',name:'Health Companion',mo:999,an:11499,si:500000,csr:94.1,hosp:4500,rt:4.1,tier:'Standard',cash:true,mat:true,men:false,cop:0,ncb:25,res:false,dig:true,tele:true,col:'#0277BD',sc:'MB'},
+  {id:'H009',ins:'Star Health',type:'Health Insurance',name:'Family Health Optima',mo:1899,an:21599,si:1000000,csr:94.44,hosp:9800,rt:4.3,tier:'Standard',cash:true,mat:true,men:true,cop:10,ncb:20,res:true,dig:true,tele:true,col:'#B71C1C',sc:'FO'},
+  {id:'H011',ins:'SBI Health',type:'Health Insurance',name:'Arogya Supreme',mo:699,an:7999,si:500000,csr:91.0,hosp:6000,rt:3.7,tier:'Economy',cash:true,mat:false,men:false,cop:0,ncb:20,res:false,dig:true,tele:false,col:'#2196F3',sc:'SB'},
+  // TERM LIFE
+  {id:'T001',ins:'LIC',type:'Term Life',name:'Tech Term',mo:799,an:8999,si:10000000,csr:98.62,hosp:0,rt:4.8,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#1A237E',sc:'LI'},
+  {id:'T002',ins:'HDFC Life',type:'Term Life',name:'Click 2 Protect Super',mo:999,an:10999,si:20000000,csr:99.39,hosp:0,rt:4.9,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#0D47A1',sc:'HL'},
+  {id:'T003',ins:'ICICI Pru',type:'Term Life',name:'iProtect Smart',mo:1099,an:11999,si:30000000,csr:97.84,hosp:0,rt:4.7,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#F57C00',sc:'IP'},
+  {id:'T004',ins:'Max Life',type:'Term Life',name:'Smart Term Plan',mo:849,an:9499,si:10000000,csr:99.51,hosp:0,rt:4.8,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#880E4F',sc:'ML'},
+  {id:'T005',ins:'Bajaj Allianz',type:'Term Life',name:'eTouch Term Plan',mo:749,an:8499,si:7500000,csr:98.02,hosp:0,rt:4.5,tier:'Budget',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#E65100',sc:'BA'},
+  {id:'T007',ins:'Tata AIA',type:'Term Life',name:'Sampoorna Raksha',mo:1299,an:13999,si:50000000,csr:99.06,hosp:0,rt:4.9,tier:'Premium',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#0288D1',sc:'TA'},
+  {id:'T008',ins:'Kotak Life',type:'Term Life',name:'e-Term Plan',mo:899,an:9999,si:10000000,csr:98.44,hosp:0,rt:4.6,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#C62828',sc:'KL'},
+  // MOTOR
+  {id:'C001',ins:'ICICI Lombard',type:'Car/Motor',name:'Comprehensive Car',mo:2499,an:2499,si:500000,csr:97.0,hosp:3500,rt:4.3,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:20,res:false,dig:true,tele:false,col:'#F57C00',sc:'IC'},
+  {id:'C002',ins:'Bajaj Allianz',type:'Car/Motor',name:'Motor Guard',mo:1999,an:1999,si:400000,csr:92.8,hosp:2800,rt:4.0,tier:'Budget',cash:true,mat:false,men:false,cop:10,ncb:15,res:false,dig:true,tele:false,col:'#E65100',sc:'BM'},
+  {id:'C003',ins:'HDFC ERGO',type:'Car/Motor',name:'Comprehensive 360',mo:2799,an:2799,si:750000,csr:98.0,hosp:4200,rt:4.5,tier:'Premium',cash:true,mat:false,men:false,cop:0,ncb:25,res:false,dig:true,tele:false,col:'#1565C0',sc:'HC'},
+  {id:'C005',ins:'Tata AIG',type:'Car/Motor',name:'AutoSafe Complete',mo:2999,an:2999,si:1000000,csr:93.5,hosp:5100,rt:4.6,tier:'Super Premium',cash:true,mat:false,men:false,cop:0,ncb:30,res:false,dig:true,tele:false,col:'#01579B',sc:'TC'},
+  {id:'C007',ins:'SBI General',type:'Car/Motor',name:'SBI Car Insurance',mo:1849,an:1849,si:450000,csr:91.0,hosp:3100,rt:3.9,tier:'Standard',cash:true,mat:false,men:false,cop:5,ncb:20,res:false,dig:true,tele:false,col:'#1A237E',sc:'SC'},
+  // TRAVEL
+  {id:'V001',ins:'Bajaj Allianz',type:'Travel Insurance',name:'Travel Companion',mo:499,an:499,si:500000,csr:92.8,hosp:0,rt:4.2,tier:'Standard',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#E65100',sc:'BT'},
+  {id:'V002',ins:'ICICI Lombard',type:'Travel Insurance',name:'Travel Shield',mo:799,an:799,si:1000000,csr:97.0,hosp:0,rt:4.4,tier:'Premium',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#F57C00',sc:'IT'},
+  {id:'V003',ins:'HDFC ERGO',type:'Travel Insurance',name:'Travel Plus 360',mo:999,an:999,si:1500000,csr:98.0,hosp:0,rt:4.5,tier:'Premium',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:true,col:'#1565C0',sc:'HT'},
+  {id:'V004',ins:'Tata AIG',type:'Travel Insurance',name:'Travel Guard',mo:1299,an:1299,si:2500000,csr:93.5,hosp:0,rt:4.6,tier:'Super Premium',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:true,col:'#01579B',sc:'TT'},
+  {id:'V005',ins:'SBI General',type:'Travel Insurance',name:'SBI Global Cover',mo:399,an:399,si:300000,csr:91.0,hosp:0,rt:3.8,tier:'Budget',cash:true,mat:false,men:false,cop:0,ncb:0,res:false,dig:true,tele:false,col:'#1A237E',sc:'ST'},
+];
+
+// ── SCORING ENGINE (14 parameters) ──
+function scoreplan(plan, profile) {
+  if (!profile) return 50;
+  let sc = 50;
+  const inc = profile.income;
+  const age = parseInt(profile.age) || 28;
+  const fam = profile.family;
+  const types = profile.types || [];
+  const prio = profile.priorities || [];
+  const health = profile.health || [];
+
+  // Parameter 1: Income-premium fit
+  const premRatio = {lower:3,lower_middle:5,middle:10,upper_middle:20,high:50}[inc]||10;
+  const affordPct = plan.mo / (premRatio * 1000 / 12) * 100;
+  if (affordPct < 5) sc += 15; else if (affordPct < 10) sc += 8;
+
+  // Parameter 2: Type match
+  if (types.includes(plan.type)) sc += 20;
+
+  // Parameter 3: CSR (claim ratio)
+  if (plan.csr >= 98) sc += 12; else if (plan.csr >= 95) sc += 8; else if (plan.csr >= 90) sc += 4;
+
+  // Parameter 4: Rating
+  sc += (plan.rt - 3) * 5;
+
+  // Parameter 5: Age-specific
+  if (age < 30 && plan.tier === 'Budget') sc += 8;
+  if (age > 45 && plan.si >= 1000000) sc += 10;
+
+  // Parameter 6: Family size
+  if (fam === 'large_family' && plan.mat) sc += 10;
+  if (fam === 'single' && plan.mo < 1000) sc += 8;
+
+  // Parameter 7: Priority - low premium
+  if (prio.includes('low_premium') && plan.mo < 1000) sc += 12;
+
+  // Parameter 8: Priority - high cover
+  if (prio.includes('high_cover') && plan.si >= 1000000) sc += 12;
+
+  // Parameter 9: Priority - claim speed
+  if (prio.includes('claim_speed') && plan.csr >= 97) sc += 10;
+
+  // Parameter 10: Priority - digital
+  if (prio.includes('digital') && plan.dig) sc += 8;
+
+  // Parameter 11: Priority - hospital network
+  if (prio.includes('hospital_network') && plan.hosp >= 10000) sc += 10;
+
+  // Parameter 12: Health conditions
+  if (health.includes('diabetes') || health.includes('cardiac')) {
+    if (plan.cop === 0) sc += 8;
+    if (plan.csr >= 96) sc += 6;
+  }
+
+  // Parameter 13: Maternity (families)
+  if (['couple','small_family'].includes(fam) && plan.mat) sc += 10;
+
+  // Parameter 14: Mental health cover
+  if (plan.men) sc += 4;
+
+  return Math.min(99, Math.round(sc));
+}
+
+// ── RENDER PLAN CARD ──
+function planCard(plan, profile, compact=false) {
+  const sc = scoreplan(plan, profile);
+  const isRec = sc >= 80;
+  const isTop = sc >= 90;
+  return `
+  <div class="pc ${isTop?'top':isRec?'rec':''}" onclick="planClick('${plan.id}')">
+    <div class="pc-strip" style="background:${plan.col}22"></div>
+    <div class="pc-head">
+      <div class="pc-logo" style="background:${plan.col}">${plan.sc}</div>
+      <div class="pc-info">
+        <div class="pc-name">${plan.name}</div>
+        <div class="pc-ins">${plan.ins} · ${plan.type}</div>
+        <div class="pc-badges">
+          ${plan.cash?'<span class="badge b-green">✓ Cashless</span>':''}
+          ${plan.dig?'<span class="badge b-blue">📱 Digital</span>':''}
+          ${plan.tele?'<span class="badge b-teal">🎥 Telemedicine</span>':''}
+          ${plan.mat?'<span class="badge b-purple">🤱 Maternity</span>':''}
+          <span class="badge b-warn">${plan.tier}</span>
+        </div>
+      </div>
+      <div class="pc-price">
+        <div class="amt">₹${plan.mo.toLocaleString()}</div>
+        <div class="per">/month</div>
+        <div class="yr">₹${plan.an.toLocaleString()}/yr</div>
+      </div>
+    </div>
+    <div class="pc-body">
+      <div class="pc-stat"><div class="sl">Sum Insured</div><div class="sv">₹${(plan.si/100000).toFixed(0)}L</div></div>
+      <div class="pc-stat"><div class="sl">Claim Ratio</div><div class="sv" style="color:${plan.csr>=97?'var(--green)':'var(--text)'}">${plan.csr}%</div></div>
+      ${plan.hosp>0?`<div class="pc-stat"><div class="sl">Hospitals</div><div class="sv">${plan.hosp.toLocaleString()}</div></div>`:''}
+      <div class="pc-stat"><div class="sl">Rating</div><div class="sv">⭐ ${plan.rt}</div></div>
+      ${plan.ncb>0?`<div class="pc-stat"><div class="sl">No Claim Bonus</div><div class="sv">+${plan.ncb}%</div></div>`:''}
+    </div>
+    <div class="pc-foot">
+      <div class="score-w">
+        <div class="sl"><span>AI Match Score</span><span style="font-weight:700;color:var(--blue)">${sc}/100</span></div>
+        <div class="sbar"><div class="sfill" style="width:${sc}%"></div></div>
+      </div>
+      <div class="pc-acts">
+        <button class="btn btn-p btn-sm" onclick="event.stopPropagation();buyPlan('${plan.id}')">${abVariant==='B'?'Get Free Quote →':'Buy Now'}</button>
+        <button class="btn btn-s btn-sm" onclick="event.stopPropagation();addCompare('${plan.id}')">Compare</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── EVENT TRACKING (Mixpanel-style) ──
+const events = [];
+function track(name, props={}) {
+  const ev = {ts: new Date().toLocaleTimeString(), name, session: SID, ab: abVariant, ...props};
+  events.unshift(ev);
+  const log = document.getElementById('ev-log');
+  if (log) {
+    const row = document.createElement('div');
+    row.className = 'evrow';
+    row.innerHTML = `<span class="evts">[${ev.ts}]</span><span class="evname">${name}</span><span class="evprop">{ session:"${SID}", ab:"${abVariant}"${props.f?`, field:"${props.f}"`:''}${props.plan?`, plan:"${props.plan}"`:''}${props.type?`, type:"${props.type}"`:''}${props.action?`, action:"${props.action}"`:''}  }</span>`;
+    log.prepend(row);
+    while(log.children.length > 50) log.removeChild(log.lastChild);
+  }
+  // Also log as API call
+  apiLog('POST', '/api/v1/analytics/event', 201, Math.floor(Math.random()*40+15));
+}
+
+function clearLog() { const l = document.getElementById('ev-log'); if(l) l.innerHTML = ''; }
+
+// ── TAG TOGGLE ──
+function toggleTag(el) {
+  el.classList.toggle('sel');
+  track('tag_toggle', {v: el.dataset.v});
+}
+
+// ── DEMO AUTOFILL ──
+function demo() {
+  document.getElementById('f-name').value = 'Rahul Sharma';
+  document.getElementById('f-age').value = '28';
+  document.getElementById('f-income').value = 'middle';
+  document.getElementById('f-city').value = 'metro';
+  document.getElementById('f-family').value = 'couple';
+  document.getElementById('f-emp').value = 'salaried';
+  document.querySelectorAll('#type-tags .tag').forEach(t => { if(['Health Insurance','Term Life'].includes(t.dataset.v)) t.classList.add('sel'); });
+  document.querySelectorAll('#health-tags .tag').forEach(t => { if(t.dataset.v === 'none') t.classList.add('sel'); });
+  document.querySelectorAll('#priority-tags .tag').forEach(t => { if(['low_premium','digital'].includes(t.dataset.v)) t.classList.add('sel'); });
+  track('demo_autofill', {});
+  showToast('✅ Demo profile loaded — Rahul Sharma, 28, Metro, ₹6–12LPA');
+}
+
+// ── SUBMIT PROFILE ──
+function submitProfile() {
+  const name = document.getElementById('f-name').value;
+  const age = document.getElementById('f-age').value;
+  const income = document.getElementById('f-income').value;
+  const city = document.getElementById('f-city').value;
+  const family = document.getElementById('f-family').value;
+  const emp = document.getElementById('f-emp').value;
+
+  if (!age || !income || !city) { showToast('⚠️ Please fill Age, Income, and City', 'warn'); return; }
+
+  const types = [...document.querySelectorAll('#type-tags .sel')].map(t => t.dataset.v);
+  const health = [...document.querySelectorAll('#health-tags .sel')].map(t => t.dataset.v);
+  const priorities = [...document.querySelectorAll('#priority-tags .sel')].map(t => t.dataset.v);
+
+  userProfile = { name, age, income, city, family, emp, types, health, priorities };
+  track('profile_submit', { income, city, family, types_count: types.length });
+  apiLog('POST', '/api/v1/user/profile', 201, 89);
+
+  // Advance stepper
+  setStep(1); setStep(2);
+
+  renderPlans();
+  renderRecommend();
+  go('recommend');
+  showToast(`🤖 AI analysed ${PLANS.length} plans for ${name || 'you'}!`);
+}
+
+// ── RENDER PLANS ──
+let filteredPlans = [...PLANS];
+let activeFilter = 'all';
+
+function renderPlans() {
+  const scored = PLANS.map(p => ({...p, _sc: scoreplan(p, userProfile)}));
+  scored.sort((a,b) => b._sc - a._sc);
+  filteredPlans = scored;
+  renderPlanGrid(filteredPlans);
+}
+
+function renderPlanGrid(plans) {
+  const g = document.getElementById('plans-grid');
+  if (!g) return;
+  g.innerHTML = plans.map(p => planCard(p, userProfile)).join('');
+  track('plans_viewed', { count: plans.length, filter: activeFilter });
+}
+
+function filterPlans(type, el) {
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  activeFilter = type;
+  const filtered = type === 'all' ? filteredPlans : filteredPlans.filter(p => p.type === type);
+  renderPlanGrid(filtered);
+  track('filter_applied', { type });
+}
+
+function sortPlans(v) {
+  const base = activeFilter === 'all' ? filteredPlans : filteredPlans.filter(p => p.type === activeFilter);
+  const sorted = [...base].sort((a,b) =>
+    v==='asc' ? a.mo-b.mo : v==='desc' ? b.mo-a.mo : v==='csr' ? b.csr-a.csr : v==='rating' ? b.rt-a.rt : (b._sc||0)-(a._sc||0));
+  renderPlanGrid(sorted);
+  track('sort_applied', { v });
+}
+
+// ── RENDER RECOMMEND ──
+function renderRecommend() {
+  const scored = PLANS.map(p => ({...p, _sc: scoreplan(p, userProfile)})).sort((a,b) => b._sc-a._sc);
+  const topPicks = scored.slice(0, 5);
+  const top = topPicks[0];
+
+  const hw = document.getElementById('rec-hero-wrap');
+  if (hw) hw.innerHTML = `
+  <div class="rh" style="margin-bottom:18px">
+    <h2>🤖 AI Top Pick for ${userProfile?.name || 'You'}: ${top.name}</h2>
+    <p>${top.ins} · ${top.type} · Score: ${top._sc}/100 · ₹${top.mo.toLocaleString()}/month</p>
+    <div class="rh-tags">
+      ${top.cash?'<span class="rh-tag">✅ Cashless Claims</span>':''}
+      ${top.csr>=97?`<span class="rh-tag">🏆 ${top.csr}% Claim Ratio</span>`:''}
+      ${top.dig?'<span class="rh-tag">📱 Fully Digital</span>':''}
+      ${top.tele?'<span class="rh-tag">🎥 Telemedicine</span>':''}
+      <span class="rh-tag">⭐ ${top.rt} Rating</span>
+    </div>
+  </div>`;
+
+  const rg = document.getElementById('rec-grid');
+  if (rg) rg.innerHTML = topPicks.map(p => planCard(p, userProfile)).join('');
+}
+
+// ── PLAN CLICK ──
+function planClick(id) {
+  track('plan_click', { plan: id });
+  const p = PLANS.find(x => x.id === id);
+  if (p) showToast(`📋 ${p.name} — ₹${p.mo}/mo | CSR: ${p.csr}%`);
+}
+
+function buyPlan(id) {
+  track('buy_click', { plan: id, variant: abVariant });
+  const p = PLANS.find(x => x.id === id);
+  apiLog('POST', '/api/v1/quote', 201, 112);
+  if (p) showToast(`🎉 Quote initiated for ${p.name}! Connecting to ${p.ins}...`);
+}
+
+// ── COMPARE ──
+const compareSet = new Set();
+function addCompare(id) {
+  if (compareSet.size >= 4 && !compareSet.has(id)) { showToast('⚠️ Max 4 plans for comparison', 'warn'); return; }
+  if (compareSet.has(id)) compareSet.delete(id); else compareSet.add(id);
+  track('compare_add', { plan: id, total: compareSet.size });
+  renderCompareSel();
+  showToast(`⚖️ ${compareSet.size} plan(s) selected for comparison`);
+}
+
+function renderCompareSel() {
+  const wrap = document.getElementById('compare-selection');
+  if (!wrap) return;
+  wrap.innerHTML = [...compareSet].map(id => {
+    const p = PLANS.find(x => x.id === id);
+    return p ? `<span style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,41,112,.08);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600"><span style="width:20px;height:20px;border-radius:5px;background:${p.col};display:inline-block"></span>${p.name} <span onclick="addCompare('${p.id}')" style="cursor:pointer;color:var(--red);font-size:14px">×</span></span>` : '';
+  }).join('');
+}
+
+function buildCompare() {
+  const ids = [...compareSet];
+  if (ids.length < 2) { showToast('⚠️ Select at least 2 plans to compare', 'warn'); return; }
+  const plans = ids.map(id => PLANS.find(p => p.id === id)).filter(Boolean);
+  track('compare_view', { plans: ids });
+
+  const rows = [
+    ['Insurer', p => p.ins],
+    ['Plan Type', p => p.type],
+    ['Monthly Premium', p => `₹${p.mo.toLocaleString()}`, true, 'low'],
+    ['Annual Premium', p => `₹${p.an.toLocaleString()}`, true, 'low'],
+    ['Sum Insured', p => `₹${(p.si/100000).toFixed(0)}L`, true, 'high'],
+    ['Claim Settlement Ratio', p => `${p.csr}%`, true, 'high'],
+    ['Network Hospitals', p => p.hosp > 0 ? p.hosp.toLocaleString() : 'N/A', true, 'high'],
+    ['App Rating', p => `⭐ ${p.rt}`, true, 'high'],
+    ['Plan Tier', p => p.tier],
+    ['Cashless Claims', p => p.cash ? '<span class="yes">✓ Yes</span>' : '<span class="no">✗ No</span>'],
+    ['Digital Policy', p => p.dig ? '<span class="yes">✓ Yes</span>' : '<span class="no">✗ No</span>'],
+    ['Telemedicine', p => p.tele ? '<span class="yes">✓ Yes</span>' : '<span class="no">✗ No</span>'],
+    ['Maternity Cover', p => p.mat ? '<span class="yes">✓ Yes</span>' : '<span class="no">✗ No</span>'],
+    ['Mental Health Cover', p => p.men ? '<span class="yes">✓ Yes</span>' : '<span class="no">✗ No</span>'],
+    ['No Claim Bonus', p => p.ncb > 0 ? `+${p.ncb}%` : 'None'],
+    ['Co-Pay', p => p.cop > 0 ? `${p.cop}%` : 'None', true, 'low'],
+    ['AI Match Score', p => `${scoreplan(p, userProfile)}/100`, true, 'high'],
+  ];
+
+  const tbl = document.getElementById('compare-table');
+  if (!tbl) return;
+  tbl.innerHTML = `<thead><tr><th>Parameter</th>${plans.map(p=>`<th>${p.name}<br><span style="font-weight:400;font-size:10px;opacity:.7">${p.ins}</span></th>`).join('')}</tr></thead><tbody>
+  ${rows.map(([label, fn, compare, dir]) => {
+    const vals = plans.map(p => fn(p));
+    let bestIdx = -1;
+    if (compare) {
+      const nums = plans.map(p => {
+        const raw = fn(p).replace(/[₹,L%⭐ /a-zA-Z]/g, '');
+        return parseFloat(raw) || 0;
+      });
+      bestIdx = dir === 'high' ? nums.indexOf(Math.max(...nums)) : nums.indexOf(Math.min(...nums));
+    }
+    return `<tr><td style="font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px">${label}</td>${vals.map((v,i)=>`<td class="${i===bestIdx?'best':''}">${v}</td>`).join('')}</tr>`;
+  }).join('')}</tbody>`;
+}
+
+// ── TAB SWITCHING ──
+const TABS = ['profile','plans','recommend','compare','analytics','backend','jira','figma'];
+function go(tab) {
+  TABS.forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if(el) el.classList.toggle('hidden', t !== tab);
+  });
+  document.querySelectorAll('.tb').forEach((btn, i) => btn.classList.toggle('active', i === TABS.indexOf(tab)));
+  track('tab_switch', { tab });
+  setStep(TABS.indexOf(tab));
+
+  if (tab === 'plans' && !userProfile) { demo(); submitProfile(); }
+  if (tab === 'plans') renderPlanGrid(filteredPlans.length ? filteredPlans : PLANS);
+  if (tab === 'analytics') { renderMetrics(); renderFunnel(); renderAB(); renderSegs(); }
+  if (tab === 'backend') { renderAPIGrid(); renderAPIEndpoints(); simulateRequests(); }
+  if (tab === 'jira') renderJira();
+  if (tab === 'compare') renderCompareSel();
+}
+
+function switchATab(t) {
+  ['overview','funnel','ab','segments','events'].forEach(id => {
+    const el = document.getElementById('atab-'+id);
+    if(el) el.classList.toggle('hidden', id !== t);
+  });
+  document.querySelectorAll('#tab-analytics .tab-bar .tb').forEach((btn, i) => {
+    btn.classList.toggle('active', ['overview','funnel','ab','segments','events'][i] === t);
+  });
+}
+
+// ── STEPPER ──
+function setStep(idx) {
+  document.querySelectorAll('.st').forEach((el, i) => {
+    el.classList.remove('act','done','pend');
+    if (i < idx) el.classList.add('done');
+    else if (i === idx) el.classList.add('act');
+    else el.classList.add('pend');
+  });
+}
+
+// ── ANALYTICS RENDER ──
+function renderMetrics() {
+  const g = document.getElementById('metrics-grid');
+  if (!g) return;
+  const mets = [
+    {v:'1,36,420',l:'Monthly Active Users',d:'+18.4%',up:true},
+    {v:'1.66%',l:'Purchase CVR',d:'+0.24pp',up:true},
+    {v:'₹4.2Cr',l:'Monthly GMV',d:'+31%',up:true},
+    {v:'58',l:'NPS Score',d:'+6 pts',up:true},
+    {v:'30.75%',l:'Profile Completion',d:'-2.1%',up:false},
+    {v:'94.3%',l:'A/B Confidence',d:'AB-007 Live',up:true},
+    {v:'142ms',l:'API p50 Latency',d:'-12ms',up:true},
+    {v:'0.4%',l:'Error Rate',d:'-0.1%',up:true},
+  ];
+  g.innerHTML = mets.map(m=>`<div class="mc"><div class="v">${m.v}</div><div class="l">${m.l}</div><div class="d ${m.up?'d-up':'d-dn'}">${m.d}</div></div>`).join('');
+
+  const tc = document.getElementById('trend-card');
+  if (tc) {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const vals = [1.42,1.51,1.48,1.59,1.63,1.71,1.66];
+    const max = Math.max(...vals);
+    tc.innerHTML = `<div class="card-title" style="margin-bottom:16px">Conversion Rate — Last 7 Days</div>
+    <div style="display:flex;align-items:flex-end;gap:8px;height:100px">
+      ${vals.map((v,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">
+        <div style="font-size:10px;color:var(--muted);font-weight:600">${v}%</div>
+        <div style="width:100%;border-radius:5px 5px 0 0;background:var(--grad);height:${(v/max*80)+10}px;min-height:8px;transition:height .6s ease"></div>
+        <div style="font-size:10px;color:var(--muted)">${days[i]}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+}
+
+function renderFunnel() {
+  const w = document.getElementById('funnel-steps');
+  if (!w) return;
+  const steps = [
+    {l:'Page Load',c:10000,pct:100,col:'#002970'},
+    {l:'Profile Start',c:5200,pct:52,col:'#005BC4'},
+    {l:'Profile Complete',c:3075,pct:30.75,col:'#00BAF2'},
+    {l:'Plans Browsed',c:1845,pct:18.45,col:'#00D4AA'},
+    {l:'Plan Selected',c:922,pct:9.22,col:'#12B76A'},
+    {l:'Quote Requested',c:415,pct:4.15,col:'#7C3AED'},
+    {l:'Purchase Intent',c:263,pct:2.63,col:'#F59E0B'},
+    {l:'Converted',c:166,pct:1.66,col:'#F04438'},
+  ];
+  w.innerHTML = steps.map(s=>`<div class="fstep"><div class="flbl">${s.l}</div><div class="fbbg"><div class="fbfill" style="width:${s.pct}%;background:${s.col}">${s.pct}%</div></div><div class="fct">${s.c.toLocaleString()}</div><div class="fpct">${s.pct}%</div></div>`).join('');
+}
+
+function renderAB() {
+  const g = document.getElementById('ab-grid');
+  if (!g) return;
+  g.innerHTML = `
+  <div class="abv"><div class="vtag" style="color:var(--muted)">Variant A — "Buy Now"</div>
+    ${[['Users','4,820'],['Clicks','434'],['CVR','9.0%'],['Revenue','₹8.2L'],['Bounce','38.1%']].map(([l,v])=>`<div class="abm"><span class="al">${l}</span><span class="av">${v}</span></div>`).join('')}
+  </div>
+  <div class="abv win"><div class="vtag" style="color:var(--green)">Variant B <span class="wcrown">👑 WINNING</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px">CTA: "Get My Free Quote →"</div>
+    ${[['Users','4,930'],['Clicks','493'],['CVR','10.0%'],['Revenue','₹9.4L'],['Bounce','32.4%']].map(([l,v])=>`<div class="abm"><span class="al">${l}</span><span class="av" style="color:var(--green);font-weight:700">${v}</span></div>`).join('')}
+  </div>`;
+
+  const ae = document.getElementById('all-exps');
+  if (!ae) return;
+  const exps = [
+    {id:'PIBPL-AB-007',name:'CTA Button Copy',st:'Live',a:'9.0%',b:'10.0%',conf:'94.3%',w:'-'},
+    {id:'PIBPL-AB-006',name:'Hero Layout (Center vs Left)',st:'Concluded',a:'7.2%',b:'8.8%',conf:'97.1%',w:'B'},
+    {id:'PIBPL-AB-005',name:'Filter Position (Top vs Side)',st:'Concluded',a:'8.1%',b:'8.3%',conf:'61.2%',w:'N/S'},
+    {id:'PIBPL-AB-004',name:'Profile Steps (1-screen vs Wizard)',st:'Concluded',a:'5.9%',b:'9.1%',conf:'99.1%',w:'B'},
+    {id:'PIBPL-AB-003',name:'Recommendation card layout',st:'Concluded',a:'6.5%',b:'8.2%',conf:'95.8%',w:'B'},
+  ];
+  ae.innerHTML = `<table class="ctbl"><thead><tr><th>Test ID</th><th>Experiment</th><th>Status</th><th>CVR A</th><th>CVR B</th><th>Confidence</th><th>Winner</th></tr></thead><tbody>
+  ${exps.map(e=>`<tr>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:10px">${e.id}</td>
+    <td style="font-weight:600;font-size:12px">${e.name}</td>
+    <td><span class="chip ${e.st==='Live'?'b-green':'b-blue'}">${e.st}</span></td>
+    <td>${e.a}</td><td style="color:var(--green);font-weight:700">${e.b}</td>
+    <td>${e.conf}</td>
+    <td style="font-weight:700;color:${e.w==='B'?'var(--green)':e.w==='N/S'?'var(--warn)':'var(--muted)'}">${e.w==='B'?'🏆 B':e.w==='N/S'?'No Sig.':e.w}</td>
+  </tr>`).join('')}</tbody></table>`;
+}
+
+function renderSegs() {
+  const g = document.getElementById('seg-cards');
+  if (!g) return;
+  const segs = [
+    {i:'🎓',n:'Young Professionals',c:'42,310',p:31,col:'#002970'},
+    {i:'👨‍👩‍👧',n:'Young Families',c:'28,540',p:21,col:'#7C3AED'},
+    {i:'👴',n:'Senior Citizens',c:'18,200',p:13,col:'#D44000'},
+    {i:'🚀',n:'HNI / Affluent',c:'11,800',p:9,col:'#059669'},
+    {i:'🏙',n:'Metro Urban',c:'23,900',p:17,col:'#0076E4'},
+    {i:'🌾',n:'Tier 2/3 / Rural',c:'12,100',p:9,col:'#F59E0B'},
+  ];
+  g.innerHTML = segs.map(s=>`<div class="sgc"><div class="sgico">${s.i}</div><div class="sgn">${s.n}</div><div class="sgct">${s.c} users · ${s.p}%</div><div class="sgbar"><div class="sgfill" style="width:${s.p*3}%;background:${s.col}"></div></div></div>`).join('');
+
+  const hm = document.getElementById('heatmap');
+  if (!hm) return;
+  const types = ['Health','Term Life','Motor','Travel'];
+  const sn = ['Young Prof.','Families','Senior','HNI','Metro','Tier2/3'];
+  const data = [[82,65,48,22],[71,88,12,31],[55,42,18,8],[90,95,68,45],[79,70,55,38],[60,58,44,28]];
+  const gc = v => v>80?'#002970':v>60?'#005BC4':v>40?'#00BAF2':'#E2E8F8';
+  const gt = v => v>50?'#fff':'#0D1B3E';
+  hm.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th style="padding:9px 11px;text-align:left;font-size:10px;color:var(--muted)">Segment</th>${types.map(t=>`<th style="padding:9px 11px;font-size:10px;color:var(--muted)">${t}</th>`).join('')}</tr></thead><tbody>${sn.map((s,i)=>`<tr><td style="padding:9px 11px;font-weight:600;font-size:12px">${s}</td>${data[i].map(v=>`<td style="padding:9px 11px;text-align:center;background:${gc(v)};color:${gt(v)};border-radius:5px;font-weight:700;font-size:12px">${v}%</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+// ── BACKEND API PANEL ──
+const API_ENDPOINTS = [
+  {m:'GET',p:'/api/v1/plans',auth:'Public',d:'List all plans with filters',ms:'142ms'},
+  {m:'GET',p:'/api/v1/plans/:id',auth:'Public',d:'Get plan details',ms:'67ms'},
+  {m:'POST',p:'/api/v1/user/profile',auth:'JWT',d:'Create/update user profile',ms:'89ms'},
+  {m:'POST',p:'/api/v1/quote',auth:'JWT',d:'Generate premium quote',ms:'112ms'},
+  {m:'POST',p:'/api/v1/purchase',auth:'JWT',d:'Initiate insurance purchase',ms:'245ms'},
+  {m:'GET',p:'/api/v1/user/policies',auth:'JWT',d:'List user active policies',ms:'98ms'},
+  {m:'POST',p:'/api/v1/claims',auth:'JWT',d:'File insurance claim',ms:'178ms'},
+  {m:'GET',p:'/api/v1/claims/:id',auth:'JWT',d:'Get claim status',ms:'54ms'},
+  {m:'POST',p:'/api/v1/analytics/event',auth:'API Key',d:'Log analytics event',ms:'22ms'},
+  {m:'GET',p:'/api/v1/ab/variant',auth:'Session',d:'Get A/B variant assignment',ms:'15ms'},
+  {m:'GET',p:'/api/v1/recommendations',auth:'JWT',d:'Get AI-scored recommendations',ms:'310ms'},
+  {m:'POST',p:'/api/v1/payments/initiate',auth:'JWT',d:'Start Paytm payment flow',ms:'198ms'},
+];
+
+const API_SERVICES = [
+  {name:'Plans Service',url:'api.paycover.in/v1/plans',status:'up',lat:'142ms',calls:'48.2K/hr',cache:'92%'},
+  {name:'AI Rec Engine',url:'ml.paycover.in/recommend',status:'up',lat:'310ms',calls:'22.1K/hr',cache:'67%'},
+  {name:'Payment Gateway',url:'pg.paytm.com/insurance',status:'up',lat:'198ms',calls:'8.4K/hr',cache:'0%'},
+  {name:'Analytics Pipeline',url:'events.paycover.in/ingest',status:'up',lat:'22ms',calls:'184K/hr',cache:'0%'},
+  {name:'KYC Service',url:'kyc.uidai.gov.in/api',status:'warn',lat:'1.2s',calls:'1.8K/hr',cache:'45%'},
+  {name:'Notification Svc',url:'notify.paycover.in',status:'up',lat:'88ms',calls:'12K/hr',cache:'0%'},
+];
+
+function renderAPIGrid() {
+  const g = document.getElementById('api-grid');
+  if (!g) return;
+  g.innerHTML = API_SERVICES.map(s=>`
+  <div class="api-card api-${s.status}">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+      <div><div class="api-name">${s.name}</div><div class="api-url">${s.url}</div></div>
+      <div class="api-status"><div class="dot-${s.status==='up'?'live':s.status}"></div>${s.status==='up'?'Online':s.status==='warn'?'Degraded':'Down'}</div>
+    </div>
+    <div class="api-meta">
+      <span>Latency: <strong>${s.lat}</strong></span>
+      <span>Cache: <strong>${s.cache}</strong></span>
+      <span>Calls: <strong>${s.calls}</strong></span>
+    </div>
+  </div>`).join('');
+}
+
+function renderAPIEndpoints() {
+  const t = document.getElementById('api-endpoints-table');
+  if (!t) return;
+  const mc = {GET:'req-GET',POST:'req-POST',PUT:'req-PUT',DELETE:'req-DELETE'};
+  t.innerHTML = API_ENDPOINTS.map(e=>`<tr>
+    <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700" class="${mc[e.m]}">${e.m}</span></td>
+    <td><code>${e.p}</code></td>
+    <td><span class="chip b-${e.auth==='Public'?'teal':e.auth==='JWT'?'blue':'purple'}">${e.auth}</span></td>
+    <td style="font-size:12px;color:var(--muted)">${e.d}</td>
+    <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${e.ms}</span></td>
+  </tr>`).join('');
+}
+
+const REQ_LOG_LINES = [];
+function apiLog(method, path, status, ms) {
+  const log = document.getElementById('req-log');
+  if (!log) return;
+  const sc = status >= 400 ? 'req-400' : status >= 300 ? 'req-300' : 'req-200';
+  const row = document.createElement('div');
+  row.className = 'req-row';
+  row.innerHTML = `<span class="req-method req-${method}">${method}</span><span class="req-path">${path}</span><span class="${sc}">${status}</span><span class="req-ms">${ms}ms</span>`;
+  log.prepend(row);
+  while (log.children.length > 30) log.removeChild(log.lastChild);
+}
+
+function callAPI(method, path) {
+  const responses = {
+    'GET/api/v1/plans': `{\n  "status": 200,\n  "data": {\n    "total": ${PLANS.length},\n    "plans": [...${PLANS.length} plans],\n    "filters": {"types": 4, "insurers": 12},\n    "cache": "hit",\n    "generated_at": "${new Date().toISOString()}"\n  }\n}`,
+    'POST/api/v1/quote': `{\n  "status": 201,\n  "data": {\n    "quote_id": "QT-${Math.random().toString(36).substr(2,8).toUpperCase()}",\n    "plan_id": "H002",\n    "annual_premium": 9999,\n    "valid_until": "${new Date(Date.now()+86400000).toISOString()}",\n    "insurer_ref": "HDFC-QT-${Math.floor(Math.random()*99999)}"\n  }\n}`,
+    'GET/api/v1/user/profile': `{\n  "status": 200,\n  "data": {\n    "user_id": "usr_${SID}",\n    "name": "${userProfile?.name||'Guest'}",\n    "age": ${userProfile?.age||28},\n    "income_band": "${userProfile?.income||'middle'}",\n    "ab_variant": "${abVariant}",\n    "session_count": ${Math.floor(Math.random()*10+1)}\n  }\n}`,
+    'POST/api/v1/analytics/event': `{\n  "status": 201,\n  "data": {\n    "event_id": "evt_${Math.random().toString(36).substr(2,10)}",\n    "session": "${SID}",\n    "queued": true,\n    "pipeline": "bigquery"\n  }\n}`,
+  };
+  const key = method + path;
+  const resp = responses[key] || `{\n  "status": 200,\n  "message": "OK"\n}`;
+  const ms = Math.floor(Math.random()*200+20);
+  const status = method==='POST'?201:200;
+  apiLog(method, path, status, ms);
+  const r = document.getElementById('api-resp');
+  if (r) r.textContent = resp;
+  track('api_call', { method, path, ms });
+}
+
+let simInterval;
+function simulateRequests() {
+  clearInterval(simInterval);
+  const endpoints = [
+    ['GET','/api/v1/plans',200,142],['POST','/api/v1/analytics/event',201,22],
+    ['GET','/api/v1/recommendations',200,310],['GET','/api/v1/ab/variant',200,15],
+    ['POST','/api/v1/user/profile',201,89],['GET','/api/v1/plans/:id',200,67],
+  ];
+  simInterval = setInterval(() => {
+    const [m,p,s,ms] = endpoints[Math.floor(Math.random()*endpoints.length)];
+    apiLog(m, p, s, ms + Math.floor(Math.random()*40-20));
+  }, 1800);
+}
+
+// ── JIRA BOARD ──
+const TICKETS = {
+  backlog: [
+    {id:'PIBPL-142',title:'Add WhatsApp notification for policy renewal reminder',type:'Feature',pri:'med',pts:5,epic:'Notifications',assign:'RK'},
+    {id:'PIBPL-138',title:'Vernacular language support — Hindi & Tamil',type:'Feature',pri:'high',pts:13,epic:'Localisation',assign:'PS'},
+    {id:'PIBPL-135',title:'Integrate Aadhaar eKYC for high-value policies',type:'Feature',pri:'high',pts:8,epic:'Compliance',assign:'AM'},
+    {id:'PIBPL-131',title:'ML model v2 — improve recommendation accuracy',type:'Enhancement',pri:'med',pts:13,epic:'AI Engine',assign:'DK'},
+  ],
+  in_progress: [
+    {id:'PIBPL-129',title:'A/B Test framework: add multi-variant support (A/B/C)',type:'Enhancement',pri:'high',pts:8,epic:'Growth',assign:'RK'},
+    {id:'PIBPL-127',title:'Progressive profiling — reduce onboarding to 3 fields',type:'Feature',pri:'high',pts:5,epic:'Onboarding',assign:'PS'},
+    {id:'PIBPL-124',title:'Real-time claim tracking dashboard',type:'Feature',pri:'med',pts:8,epic:'Claims',assign:'AM'},
+  ],
+  review: [
+    {id:'PIBPL-122',title:'Fix CSR sorting logic in filter bar',type:'Bug',pri:'high',pts:2,epic:'Core',assign:'DK'},
+    {id:'PIBPL-120',title:'Compare table performance — lazy load columns',type:'Enhancement',pri:'med',pts:3,epic:'Core',assign:'RK'},
+    {id:'PIBPL-118',title:'Add plan PDF download for purchased policies',type:'Feature',pri:'low',pts:3,epic:'Claims',assign:'PS'},
+  ],
+  done: [
+    {id:'PIBPL-115',title:'AI scoring engine — 14 parameter model',type:'Feature',pri:'high',pts:13,epic:'AI Engine',assign:'DK'},
+    {id:'PIBPL-112',title:'Segment heatmap in PM Dashboard',type:'Feature',pri:'med',pts:5,epic:'Analytics',assign:'AM'},
+    {id:'PIBPL-110',title:'Side-by-side compare (up to 4 plans)',type:'Feature',pri:'high',pts:8,epic:'Core',assign:'RK'},
+    {id:'PIBPL-108',title:'Event tracking — Mixpanel-style logging',type:'Feature',pri:'med',pts:5,epic:'Analytics',assign:'PS'},
+    {id:'PIBPL-104',title:'Plan card redesign — new badge system',type:'Enhancement',pri:'low',pts:3,epic:'Core',assign:'DK'},
+  ]
+};
+
+const EPIC_COLORS = {Core:'#002970',Growth:'#7C3AED','AI Engine':'#D44000',Analytics:'#059669',Claims:'#0076E4',Compliance:'#B45309',Localisation:'#880E4F',Notifications:'#00796B',Onboarding:'#1565C0'};
+
+function renderJira() {
+  const board = document.getElementById('kanban-board');
+  if (!board) return;
+  const cols = [
+    {key:'backlog',label:'📋 Backlog'},
+    {key:'in_progress',label:'🔄 In Progress'},
+    {key:'review',label:'👀 In Review'},
+    {key:'done',label:'✅ Done'},
+  ];
+  board.innerHTML = cols.map(col => `
+  <div class="kb-col">
+    <div class="kb-head">${col.label}<span class="kb-count">${TICKETS[col.key].length}</span></div>
+    ${TICKETS[col.key].map(t => `
+    <div class="ticket" onclick="ticketClick('${t.id}')">
+      <div class="epic-bar" style="background:${EPIC_COLORS[t.epic]||'#ccc'}"></div>
+      <div class="ticket-id">${t.id}</div>
+      <div class="ticket-title">${t.title}</div>
+      <div class="ticket-meta">
+        <span class="priority p-${t.pri}">${t.pri==='high'?'🔴 High':t.pri==='med'?'🟡 Med':'🟢 Low'}</span>
+        <span class="story-pts">${t.pts} pts</span>
+        <div class="assignee">${t.assign}</div>
+      </div>
+      <div class="ticket-tags">
+        <span class="ttag">${t.type}</span>
+        <span class="ttag" style="background:${EPIC_COLORS[t.epic]||'#ccc'}22;color:${EPIC_COLORS[t.epic]||'#666'}">${t.epic}</span>
+      </div>
+    </div>`).join('')}
+  </div>`).join('');
+
+  // Velocity chart
+  const vc = document.getElementById('velocity-chart');
+  if (vc) {
+    const sprints = [{s:'S9',v:62},{s:'S10',v:68},{s:'S11',v:71},{s:'S12',v:65},{s:'S13',v:75},{s:'S14',v:48}];
+    const max = 80;
+    vc.innerHTML = sprints.map(s=>`<div class="vbar-w"><div class="vbar" style="height:${s.v/max*80}px;background:${s.s==='S14'?'var(--warn)':'var(--grad)'}"></div><div class="vbar-l">${s.v}</div><div class="vbar-l">${s.s}</div></div>`).join('');
+  }
+
+  // Epic progress
+  const ep = document.getElementById('epic-progress');
+  if (ep) {
+    const epics = [{n:'AI Engine',p:60,col:'#D44000'},{n:'Core UX',p:85,col:'#002970'},{n:'Analytics',p:75,col:'#059669'},{n:'Growth',p:40,col:'#7C3AED'},{n:'Compliance',p:25,col:'#B45309'},{n:'Claims',p:50,col:'#0076E4'}];
+    ep.innerHTML = epics.map(e=>`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px"><span>${e.n}</span><span style="color:var(--muted)">${e.p}%</span></div><div class="sgbar"><div class="sgfill" style="width:${e.p}%;background:${e.col}"></div></div></div>`).join('');
+  }
+}
+
+function ticketClick(id) {
+  const all = Object.values(TICKETS).flat();
+  const t = all.find(x => x.id === id);
+  if (t) { showToast(`📌 ${t.id}: ${t.title.substring(0,40)}...`); track('ticket_click', {id}); }
+}
+
+// ── FIGMA PRD TABS ──
+const PRD_SECTIONS = ['overview','problem','ux','metrics','tech','risks'];
+function switchPRD(section, el) {
+  PRD_SECTIONS.forEach(s => {
+    const d = document.getElementById('prd-'+s);
+    if (d) d.classList.toggle('hidden', s !== section);
+  });
+  document.querySelectorAll('.prd-tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── TOAST ──
+function showToast(msg, type='success') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = type === 'warn' ? '#92400E' : 'var(--navy)';
+  t.innerHTML = `<span>${type==='warn'?'⚠️':'✅'}</span>${msg}`;
+  c.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 50);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => { if(c.contains(t)) c.removeChild(t); }, 400); }, 3500);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  track('session_start', { referrer: 'direct', device: 'web' });
+  document.getElementById('ab-badge').textContent = `⚗ Variant ${abVariant} Active`;
+  // Init event log with session start
+  const log = document.getElementById('ev-log');
+  if(log) log.innerHTML = `<div class="evrow"><span class="evts">[${new Date().toLocaleTimeString()}]</span><span class="evname">SESSION_START</span><span class="evprop">{ session_id:"${SID}", ab_variant:"${abVariant}", device:"web", timestamp:"${new Date().toISOString()}" }</span></div>`;
+  setTimeout(() => showToast(`⚗ A/B Variant ${abVariant} assigned — session ${SID}`), 500);
+});
+</script>
+</body>
+</html>
